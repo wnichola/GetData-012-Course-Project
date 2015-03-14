@@ -21,6 +21,6 @@ The objective of this file is to provide brief instructions on the use of the sc
 5.  At the editor toolbar, select "knit HTML".  This would generate the run_analysis.html file, generate the merge_tidy.txt file into the Working Directory.  This also "source" the embeded 'R' script within the markdown file.  Alternatively, you can also use the R console command, knit2html("run_analysis.Rmd").  You would need to load the knitr library to do this.
 6.  To create the 'R' script, at the R console, load the knitr library, and type purl("run_analysis.Rmd")
 
-## Metadata Analysis and Assumptions
+## Metadata Analysis and Assumptions (or Codebook)
 1.  For the analysis of the metadata of the downloaded dataset and the assumptions made, please read the run_analysis.html file.  
 2.  If you are familar with 'R' markdown files, the knitr will generate the run_analysis.html and display it when the Rmd is knitr.
