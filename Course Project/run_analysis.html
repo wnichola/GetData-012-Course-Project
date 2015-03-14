@@ -452,7 +452,7 @@ str(y_train)</code></pre>
 <pre><code>## 'data.frame':    2947 obs. of  1 variable:
 ##  $ V1: int  5 5 5 5 5 5 5 5 5 5 ...</code></pre>
 <pre class="r"><code>## Unique values from y_train and y_test
-unique(y_train)</code></pre>
+unique(y_train)         # If values matches those in activities_labels, this could be the Activities</code></pre>
 <pre><code>##     V1
 ## 1    5
 ## 28   4
@@ -469,10 +469,10 @@ unique(y_train)</code></pre>
 ## 110  3
 ## 134  2</code></pre>
 <pre class="r"><code>## Unique values from y_train and y_test
-length(unique(y_train))</code></pre>
-<pre><code>## [1] 1</code></pre>
-<pre class="r"><code>length(unique(y_test))</code></pre>
-<pre><code>## [1] 1</code></pre>
+nrow(unique(y_train))   # If it is 6 unique observation, this could be the Activities</code></pre>
+<pre><code>## [1] 6</code></pre>
+<pre class="r"><code>nrow(unique(y_test))    </code></pre>
+<pre><code>## [1] 6</code></pre>
 <pre class="r"><code>## Metadata of subject_train and subject_test
 str(subject_train)</code></pre>
 <pre><code>## 'data.frame':    7352 obs. of  1 variable:
@@ -481,7 +481,7 @@ str(subject_train)</code></pre>
 <pre><code>## 'data.frame':    2947 obs. of  1 variable:
 ##  $ V1: int  2 2 2 2 2 2 2 2 2 2 ...</code></pre>
 <pre class="r"><code>## Unique values from subject_train and subject_test
-unique(subject_train$V1)</code></pre>
+unique(subject_train$V1)    # Are values between 1 to 30? If so, these are the subjects</code></pre>
 <pre><code>##  [1]  1  3  5  6  7  8 11 14 15 16 17 19 21 22 23 25 26 27 28 29 30</code></pre>
 <pre class="r"><code>unique(subject_test$V1)</code></pre>
 <pre><code>## [1]  2  4  9 10 12 13 18 20 24</code></pre>
@@ -2485,7 +2485,7 @@ merge_df_test &lt;- merge_by_row (merge_df_test, total_acc_z_test)
 merge_list &lt;- list(merge_df_train, merge_df_test)
 merge_df_all &lt;- rbindlist(merge_list)</code></pre>
 <p>The merged training and the test sets in the one data set: merge_df_all.</p>
-<p>Extracting only the measurements on the mean and standard deviation for each measurement.</p>
+<p>Extracting only the measurements on the mean and standard deviation for each measurement for all the features, such as acceleration, angle, jerk, etc..</p>
 <pre class="r"><code>## Retrieve columns that are means or standard deviations (std)\
 
 mean_std_col &lt;- names(merge_df_all)[grepl(&quot;mean&quot;, names(merge_df_all), ignore.case = TRUE) | grepl(&quot;std&quot;, names(merge_df_all), ignore.case = TRUE)]
@@ -2502,7 +2502,7 @@ merge_df_select$Activity &lt;- activity_labels[merge_df_select$Activity, ]$V2</c
 
 merge_select_means &lt;- merge_df_select %&gt;% group_by(Subject_ID, Activity) %&gt;%
     summarise_each(funs(mean))</code></pre>
-<p>The new dataset is: merge_tidy.txt.</p>
+<p>The new dataset is: merge_tidy.txt.<br />This file contains all the averages of the means and standard deviations of all the features of accelertion, gyro, jerk, etc, group by the Subject and the Activity.</p>
 </div>
 </div>
 

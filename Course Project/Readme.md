@@ -23,4 +23,4 @@ The objective of this file is to provide brief instructions on the use of the sc
 
 ## Metadata Analysis and Assumptions (or Codebook)
 1.  For the analysis of the metadata of the downloaded dataset and the assumptions made, please read the run_analysis.html file.  
-2.  If you are familar with 'R' markdown files, the knitr will generate the run_analysis.html and display it when the Rmd is knitr.
+2.  If you are familar with 'R' markdown files, the knitr will generate the run_analysis.html and display it when the Rmd is knitr.  

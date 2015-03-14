@@ -158,19 +158,19 @@ str(y_train)
 str(y_test)
 
 ## Unique values from y_train and y_test
-unique(y_train)
+unique(y_train)         # If values matches those in activities_labels, this could be the Activities
 unique(y_test)
 
 ## Unique values from y_train and y_test
-length(unique(y_train))
-length(unique(y_test))
+nrow(unique(y_train))   # If it is 6 unique observation, this could be the Activities
+nrow(unique(y_test))    
 
 ## Metadata of subject_train and subject_test
 str(subject_train)
 str(subject_test)
 
 ## Unique values from subject_train and subject_test
-unique(subject_train$V1)
+unique(subject_train$V1)    # Are values between 1 to 30? If so, these are the subjects
 unique(subject_test$V1)
 
 ## Number of unique values from subject_train and subject_test
@@ -375,7 +375,8 @@ The merged  training and the test sets in the one data set: merge_df_all.
 # write.csv(merge_df_all, file="merge_df_all.csv", quote=FALSE)
 
 ```
-Extracting only the measurements on the mean and standard deviation for each measurement.
+Extracting only the measurements on the mean and standard deviation for each measurement for all the features, such as acceleration, angle, jerk, etc..
+
 ```{r}
 ## Retrieve columns that are means or standard deviations (std)\
 
@@ -415,7 +416,9 @@ merge_select_means <- merge_df_select %>% group_by(Subject_ID, Activity) %>%
     summarise_each(funs(mean))
 
 ```
-The new dataset is: merge_tidy.txt.   
+The new dataset is: merge_tidy.txt.  
+This file contains all the averages of the means and standard deviations of all the features of accelertion, gyro, jerk, etc, group by the Subject and the Activity.
+  
 ```{r echo = FALSE}
 
 ## print(merge_select_means)
@@ -424,4 +427,9 @@ The new dataset is: merge_tidy.txt.
 ## Instead the following file would be created for submission: merge_tidy.txt
 write.table(merge_select_means, file="merge_tidy.txt", row.name=FALSE)
 
+## Please refer to the codebook run_analysis.html for how this file is finally created.
+
 ```
+  
+
+  

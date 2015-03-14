@@ -123,19 +123,19 @@ str(y_train)
 str(y_test)
 
 ## Unique values from y_train and y_test
-unique(y_train)
+unique(y_train)         # If values matches those in activities_labels, this could be the Activities
 unique(y_test)
 
 ## Unique values from y_train and y_test
-length(unique(y_train))
-length(unique(y_test))
+nrow(unique(y_train))   # If it is 6 unique observation, this could be the Activities
+nrow(unique(y_test))    
 
 ## Metadata of subject_train and subject_test
 str(subject_train)
 str(subject_test)
 
 ## Unique values from subject_train and subject_test
-unique(subject_train$V1)
+unique(subject_train$V1)    # Are values between 1 to 30? If so, these are the subjects
 unique(subject_test$V1)
 
 ## Number of unique values from subject_train and subject_test
@@ -330,5 +330,7 @@ merge_select_means <- merge_df_select %>% group_by(Subject_ID, Activity) %>%
 
 ## Instead the following file would be created for submission: merge_tidy.txt
 write.table(merge_select_means, file="merge_tidy.txt", row.name=FALSE)
+
+## Please refer to the codebook run_analysis.html for how this file is finally created.
 
 
