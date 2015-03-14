@@ -1,391 +1,192 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+---
+title: "getdata-012: Getting and Cleaning Data Course Project"
+author: "Nicholas Wee"
+date: "Thursday, March 12, 2015"
+output: html_document
+---
+# Overview
+The purpose of this R markdown file is to document the the metadata analysis, assumptions and process of Getting and Cleaning the dataset into a single data file as the submission requirements for this project.
 
-<title>Overview</title>
+The R codes within this Markdown will subsequently be extracted and placed into the run_analysis.R for submission purpose.  
 
-<script type="text/javascript">
-window.onload = function() {
-  var imgs = document.getElementsByTagName('img'), i, img;
-  for (i = 0; i < imgs.length; i++) {
-    img = imgs[i];
-    // center an image if it is the only element of its parent
-    if (img.parentElement.childElementCount === 1)
-      img.parentElement.style.textAlign = 'center';
-  }
-};
-</script>
-
-<!-- Styles for R syntax highlighter -->
-<style type="text/css">
-   pre .operator,
-   pre .paren {
-     color: rgb(104, 118, 135)
-   }
-
-   pre .literal {
-     color: #990073
-   }
-
-   pre .number {
-     color: #099;
-   }
-
-   pre .comment {
-     color: #998;
-     font-style: italic
-   }
-
-   pre .keyword {
-     color: #900;
-     font-weight: bold
-   }
-
-   pre .identifier {
-     color: rgb(0, 0, 0);
-   }
-
-   pre .string {
-     color: #d14;
-   }
-</style>
-
-<!-- R syntax highlighter -->
-<script type="text/javascript">
-var hljs=new function(){function m(p){return p.replace(/&/gm,"&amp;").replace(/</gm,"&lt;")}function f(r,q,p){return RegExp(q,"m"+(r.cI?"i":"")+(p?"g":""))}function b(r){for(var p=0;p<r.childNodes.length;p++){var q=r.childNodes[p];if(q.nodeName=="CODE"){return q}if(!(q.nodeType==3&&q.nodeValue.match(/\s+/))){break}}}function h(t,s){var p="";for(var r=0;r<t.childNodes.length;r++){if(t.childNodes[r].nodeType==3){var q=t.childNodes[r].nodeValue;if(s){q=q.replace(/\n/g,"")}p+=q}else{if(t.childNodes[r].nodeName=="BR"){p+="\n"}else{p+=h(t.childNodes[r])}}}if(/MSIE [678]/.test(navigator.userAgent)){p=p.replace(/\r/g,"\n")}return p}function a(s){var r=s.className.split(/\s+/);r=r.concat(s.parentNode.className.split(/\s+/));for(var q=0;q<r.length;q++){var p=r[q].replace(/^language-/,"");if(e[p]){return p}}}function c(q){var p=[];(function(s,t){for(var r=0;r<s.childNodes.length;r++){if(s.childNodes[r].nodeType==3){t+=s.childNodes[r].nodeValue.length}else{if(s.childNodes[r].nodeName=="BR"){t+=1}else{if(s.childNodes[r].nodeType==1){p.push({event:"start",offset:t,node:s.childNodes[r]});t=arguments.callee(s.childNodes[r],t);p.push({event:"stop",offset:t,node:s.childNodes[r]})}}}}return t})(q,0);return p}function k(y,w,x){var q=0;var z="";var s=[];function u(){if(y.length&&w.length){if(y[0].offset!=w[0].offset){return(y[0].offset<w[0].offset)?y:w}else{return w[0].event=="start"?y:w}}else{return y.length?y:w}}function t(D){var A="<"+D.nodeName.toLowerCase();for(var B=0;B<D.attributes.length;B++){var C=D.attributes[B];A+=" "+C.nodeName.toLowerCase();if(C.value!==undefined&&C.value!==false&&C.value!==null){A+='="'+m(C.value)+'"'}}return A+">"}while(y.length||w.length){var v=u().splice(0,1)[0];z+=m(x.substr(q,v.offset-q));q=v.offset;if(v.event=="start"){z+=t(v.node);s.push(v.node)}else{if(v.event=="stop"){var p,r=s.length;do{r--;p=s[r];z+=("</"+p.nodeName.toLowerCase()+">")}while(p!=v.node);s.splice(r,1);while(r<s.length){z+=t(s[r]);r++}}}}return z+m(x.substr(q))}function j(){function q(x,y,v){if(x.compiled){return}var u;var s=[];if(x.k){x.lR=f(y,x.l||hljs.IR,true);for(var w in x.k){if(!x.k.hasOwnProperty(w)){continue}if(x.k[w] instanceof Object){u=x.k[w]}else{u=x.k;w="keyword"}for(var r in u){if(!u.hasOwnProperty(r)){continue}x.k[r]=[w,u[r]];s.push(r)}}}if(!v){if(x.bWK){x.b="\\b("+s.join("|")+")\\s"}x.bR=f(y,x.b?x.b:"\\B|\\b");if(!x.e&&!x.eW){x.e="\\B|\\b"}if(x.e){x.eR=f(y,x.e)}}if(x.i){x.iR=f(y,x.i)}if(x.r===undefined){x.r=1}if(!x.c){x.c=[]}x.compiled=true;for(var t=0;t<x.c.length;t++){if(x.c[t]=="self"){x.c[t]=x}q(x.c[t],y,false)}if(x.starts){q(x.starts,y,false)}}for(var p in e){if(!e.hasOwnProperty(p)){continue}q(e[p].dM,e[p],true)}}function d(B,C){if(!j.called){j();j.called=true}function q(r,M){for(var L=0;L<M.c.length;L++){if((M.c[L].bR.exec(r)||[null])[0]==r){return M.c[L]}}}function v(L,r){if(D[L].e&&D[L].eR.test(r)){return 1}if(D[L].eW){var M=v(L-1,r);return M?M+1:0}return 0}function w(r,L){return L.i&&L.iR.test(r)}function K(N,O){var M=[];for(var L=0;L<N.c.length;L++){M.push(N.c[L].b)}var r=D.length-1;do{if(D[r].e){M.push(D[r].e)}r--}while(D[r+1].eW);if(N.i){M.push(N.i)}return f(O,M.join("|"),true)}function p(M,L){var N=D[D.length-1];if(!N.t){N.t=K(N,E)}N.t.lastIndex=L;var r=N.t.exec(M);return r?[M.substr(L,r.index-L),r[0],false]:[M.substr(L),"",true]}function z(N,r){var L=E.cI?r[0].toLowerCase():r[0];var M=N.k[L];if(M&&M instanceof Array){return M}return false}function F(L,P){L=m(L);if(!P.k){return L}var r="";var O=0;P.lR.lastIndex=0;var M=P.lR.exec(L);while(M){r+=L.substr(O,M.index-O);var N=z(P,M);if(N){x+=N[1];r+='<span class="'+N[0]+'">'+M[0]+"</span>"}else{r+=M[0]}O=P.lR.lastIndex;M=P.lR.exec(L)}return r+L.substr(O,L.length-O)}function J(L,M){if(M.sL&&e[M.sL]){var r=d(M.sL,L);x+=r.keyword_count;return r.value}else{return F(L,M)}}function I(M,r){var L=M.cN?'<span class="'+M.cN+'">':"";if(M.rB){y+=L;M.buffer=""}else{if(M.eB){y+=m(r)+L;M.buffer=""}else{y+=L;M.buffer=r}}D.push(M);A+=M.r}function G(N,M,Q){var R=D[D.length-1];if(Q){y+=J(R.buffer+N,R);return false}var P=q(M,R);if(P){y+=J(R.buffer+N,R);I(P,M);return P.rB}var L=v(D.length-1,M);if(L){var O=R.cN?"</span>":"";if(R.rE){y+=J(R.buffer+N,R)+O}else{if(R.eE){y+=J(R.buffer+N,R)+O+m(M)}else{y+=J(R.buffer+N+M,R)+O}}while(L>1){O=D[D.length-2].cN?"</span>":"";y+=O;L--;D.length--}var r=D[D.length-1];D.length--;D[D.length-1].buffer="";if(r.starts){I(r.starts,"")}return R.rE}if(w(M,R)){throw"Illegal"}}var E=e[B];var D=[E.dM];var A=0;var x=0;var y="";try{var s,u=0;E.dM.buffer="";do{s=p(C,u);var t=G(s[0],s[1],s[2]);u+=s[0].length;if(!t){u+=s[1].length}}while(!s[2]);if(D.length>1){throw"Illegal"}return{r:A,keyword_count:x,value:y}}catch(H){if(H=="Illegal"){return{r:0,keyword_count:0,value:m(C)}}else{throw H}}}function g(t){var p={keyword_count:0,r:0,value:m(t)};var r=p;for(var q in e){if(!e.hasOwnProperty(q)){continue}var s=d(q,t);s.language=q;if(s.keyword_count+s.r>r.keyword_count+r.r){r=s}if(s.keyword_count+s.r>p.keyword_count+p.r){r=p;p=s}}if(r.language){p.second_best=r}return p}function i(r,q,p){if(q){r=r.replace(/^((<[^>]+>|\t)+)/gm,function(t,w,v,u){return w.replace(/\t/g,q)})}if(p){r=r.replace(/\n/g,"<br>")}return r}function n(t,w,r){var x=h(t,r);var v=a(t);var y,s;if(v){y=d(v,x)}else{return}var q=c(t);if(q.length){s=document.createElement("pre");s.innerHTML=y.value;y.value=k(q,c(s),x)}y.value=i(y.value,w,r);var u=t.className;if(!u.match("(\\s|^)(language-)?"+v+"(\\s|$)")){u=u?(u+" "+v):v}if(/MSIE [678]/.test(navigator.userAgent)&&t.tagName=="CODE"&&t.parentNode.tagName=="PRE"){s=t.parentNode;var p=document.createElement("div");p.innerHTML="<pre><code>"+y.value+"</code></pre>";t=p.firstChild.firstChild;p.firstChild.cN=s.cN;s.parentNode.replaceChild(p.firstChild,s)}else{t.innerHTML=y.value}t.className=u;t.result={language:v,kw:y.keyword_count,re:y.r};if(y.second_best){t.second_best={language:y.second_best.language,kw:y.second_best.keyword_count,re:y.second_best.r}}}function o(){if(o.called){return}o.called=true;var r=document.getElementsByTagName("pre");for(var p=0;p<r.length;p++){var q=b(r[p]);if(q){n(q,hljs.tabReplace)}}}function l(){if(window.addEventListener){window.addEventListener("DOMContentLoaded",o,false);window.addEventListener("load",o,false)}else{if(window.attachEvent){window.attachEvent("onload",o)}else{window.onload=o}}}var e={};this.LANGUAGES=e;this.highlight=d;this.highlightAuto=g;this.fixMarkup=i;this.highlightBlock=n;this.initHighlighting=o;this.initHighlightingOnLoad=l;this.IR="[a-zA-Z][a-zA-Z0-9_]*";this.UIR="[a-zA-Z_][a-zA-Z0-9_]*";this.NR="\\b\\d+(\\.\\d+)?";this.CNR="\\b(0[xX][a-fA-F0-9]+|(\\d+(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)";this.BNR="\\b(0b[01]+)";this.RSR="!|!=|!==|%|%=|&|&&|&=|\\*|\\*=|\\+|\\+=|,|\\.|-|-=|/|/=|:|;|<|<<|<<=|<=|=|==|===|>|>=|>>|>>=|>>>|>>>=|\\?|\\[|\\{|\\(|\\^|\\^=|\\||\\|=|\\|\\||~";this.ER="(?![\\s\\S])";this.BE={b:"\\\\.",r:0};this.ASM={cN:"string",b:"'",e:"'",i:"\\n",c:[this.BE],r:0};this.QSM={cN:"string",b:'"',e:'"',i:"\\n",c:[this.BE],r:0};this.CLCM={cN:"comment",b:"//",e:"$"};this.CBLCLM={cN:"comment",b:"/\\*",e:"\\*/"};this.HCM={cN:"comment",b:"#",e:"$"};this.NM={cN:"number",b:this.NR,r:0};this.CNM={cN:"number",b:this.CNR,r:0};this.BNM={cN:"number",b:this.BNR,r:0};this.inherit=function(r,s){var p={};for(var q in r){p[q]=r[q]}if(s){for(var q in s){p[q]=s[q]}}return p}}();hljs.LANGUAGES.cpp=function(){var a={keyword:{"false":1,"int":1,"float":1,"while":1,"private":1,"char":1,"catch":1,"export":1,virtual:1,operator:2,sizeof:2,dynamic_cast:2,typedef:2,const_cast:2,"const":1,struct:1,"for":1,static_cast:2,union:1,namespace:1,unsigned:1,"long":1,"throw":1,"volatile":2,"static":1,"protected":1,bool:1,template:1,mutable:1,"if":1,"public":1,friend:2,"do":1,"return":1,"goto":1,auto:1,"void":2,"enum":1,"else":1,"break":1,"new":1,extern:1,using:1,"true":1,"class":1,asm:1,"case":1,typeid:1,"short":1,reinterpret_cast:2,"default":1,"double":1,register:1,explicit:1,signed:1,typename:1,"try":1,"this":1,"switch":1,"continue":1,wchar_t:1,inline:1,"delete":1,alignof:1,char16_t:1,char32_t:1,constexpr:1,decltype:1,noexcept:1,nullptr:1,static_assert:1,thread_local:1,restrict:1,_Bool:1,complex:1},built_in:{std:1,string:1,cin:1,cout:1,cerr:1,clog:1,stringstream:1,istringstream:1,ostringstream:1,auto_ptr:1,deque:1,list:1,queue:1,stack:1,vector:1,map:1,set:1,bitset:1,multiset:1,multimap:1,unordered_set:1,unordered_map:1,unordered_multiset:1,unordered_multimap:1,array:1,shared_ptr:1}};return{dM:{k:a,i:"</",c:[hljs.CLCM,hljs.CBLCLM,hljs.QSM,{cN:"string",b:"'\\\\?.",e:"'",i:"."},{cN:"number",b:"\\b(\\d+(\\.\\d*)?|\\.\\d+)(u|U|l|L|ul|UL|f|F)"},hljs.CNM,{cN:"preprocessor",b:"#",e:"$"},{cN:"stl_container",b:"\\b(deque|list|queue|stack|vector|map|set|bitset|multiset|multimap|unordered_map|unordered_set|unordered_multiset|unordered_multimap|array)\\s*<",e:">",k:a,r:10,c:["self"]}]}}}();hljs.LANGUAGES.r={dM:{c:[hljs.HCM,{cN:"number",b:"\\b0[xX][0-9a-fA-F]+[Li]?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+(?:[eE][+\\-]?\\d*)?L\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+\\.(?!\\d)(?:i\\b)?",e:hljs.IMMEDIATE_RE,r:1},{cN:"number",b:"\\b\\d+(?:\\.\\d*)?(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\.\\d+(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"keyword",b:"(?:tryCatch|library|setGeneric|setGroupGeneric)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\.",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\d+(?![\\w.])",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\b(?:function)",e:hljs.IMMEDIATE_RE,r:2},{cN:"keyword",b:"(?:if|in|break|next|repeat|else|for|return|switch|while|try|stop|warning|require|attach|detach|source|setMethod|setClass)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"literal",b:"(?:NA|NA_integer_|NA_real_|NA_character_|NA_complex_)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"literal",b:"(?:NULL|TRUE|FALSE|T|F|Inf|NaN)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"identifier",b:"[a-zA-Z.][a-zA-Z0-9._]*\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"<\\-(?!\\s*\\d)",e:hljs.IMMEDIATE_RE,r:2},{cN:"operator",b:"\\->|<\\-",e:hljs.IMMEDIATE_RE,r:1},{cN:"operator",b:"%%|~",e:hljs.IMMEDIATE_RE},{cN:"operator",b:">=|<=|==|!=|\\|\\||&&|=|\\+|\\-|\\*|/|\\^|>|<|!|&|\\||\\$|:",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"%",e:"%",i:"\\n",r:1},{cN:"identifier",b:"`",e:"`",r:0},{cN:"string",b:'"',e:'"',c:[hljs.BE],r:0},{cN:"string",b:"'",e:"'",c:[hljs.BE],r:0},{cN:"paren",b:"[[({\\])}]",e:hljs.IMMEDIATE_RE,r:0}]}};
-hljs.initHighlightingOnLoad();
-</script>
-
-<!-- MathJax scripts -->
-<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-</script>
+# Loading the data for metadata analysis
+As there are no proper column labels or documentation on the data contained within each file and its stucture, there is a need to generate some metadata on the dataset to understand how these files are related to each other, so as to define the strategy to merge them.  Also, there is a need to document some of the assumptions made about the files' structure, and thus the approach in assigning the labels to each column for the final output file.
 
 
-<style type="text/css">
-body, td {
-   font-family: sans-serif;
-   background-color: white;
-   font-size: 13px;
-}
-
-body {
-  max-width: 800px;
-  margin: auto;
-  padding: 1em;
-  line-height: 20px;
-}
-
-tt, code, pre {
-   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
-}
-
-h1 {
-   font-size:2.2em;
-}
-
-h2 {
-   font-size:1.8em;
-}
-
-h3 {
-   font-size:1.4em;
-}
-
-h4 {
-   font-size:1.0em;
-}
-
-h5 {
-   font-size:0.9em;
-}
-
-h6 {
-   font-size:0.8em;
-}
-
-a:visited {
-   color: rgb(50%, 0%, 50%);
-}
-
-pre, img {
-  max-width: 100%;
-}
-pre {
-  overflow-x: auto;
-}
-pre code {
-   display: block; padding: 0.5em;
-}
-
-code {
-  font-size: 92%;
-  border: 1px solid #ccc;
-}
-
-code[class] {
-  background-color: #F8F8F8;
-}
-
-table, td, th {
-  border: none;
-}
-
-blockquote {
-   color:#666666;
-   margin:0;
-   padding-left: 1em;
-   border-left: 0.5em #EEE solid;
-}
-
-hr {
-   height: 0px;
-   border-bottom: none;
-   border-top-width: thin;
-   border-top-style: dotted;
-   border-top-color: #999999;
-}
-
-@media print {
-   * {
-      background: transparent !important;
-      color: black !important;
-      filter:none !important;
-      -ms-filter: none !important;
-   }
-
-   body {
-      font-size:12pt;
-      max-width:100%;
-   }
-
-   a, a:visited {
-      text-decoration: underline;
-   }
-
-   hr {
-      visibility: hidden;
-      page-break-before: always;
-   }
-
-   pre, blockquote {
-      padding-right: 1em;
-      page-break-inside: avoid;
-   }
-
-   tr, img {
-      page-break-inside: avoid;
-   }
-
-   img {
-      max-width: 100% !important;
-   }
-
-   @page :left {
-      margin: 15mm 20mm 15mm 10mm;
-   }
-
-   @page :right {
-      margin: 15mm 10mm 15mm 20mm;
-   }
-
-   p, h2, h3 {
-      orphans: 3; widows: 3;
-   }
-
-   h2, h3 {
-      page-break-after: avoid;
-   }
-}
-</style>
-
-
-
-</head>
-
-<body>
-<h1>Overview</h1>
-
-<p>The purpose of this R markdown file is to document the the metadata analysis, assumptions and process of Getting and Cleaning the dataset into a single data file as the submission requirements for this project.</p>
-
-<p>The R codes within this Markdown will subsequently be extracted and placed into the run_analysis.R for submission purpose.  </p>
-
-<h1>Loading the data for metadata analysis</h1>
-
-<p>As there are no proper column labels or documentation on the data contained within each file and its stucture, there is a need to generate some metadata on the dataset to understand how these files are related to each other, so as to define the strategy to merge them.  Also, there is a need to document some of the assumptions made about the files&#39; structure, and thus the approach in assigning the labels to each column for the final output file.</p>
-
-<pre><code class="r">## Load the libraries
+```r
+## Load the libraries
 library(data.table)
 library(dplyr)
 library(RCurl)
 
 ## Download the file from the URL provided in the project brief
-if (!file.exists(&quot;./data&quot;)) file.create(&quot;./data&quot;)
+if (!file.exists("./data")) file.create("./data")
 
-if (!file.exists(&quot;./data/UCI HAR Dataset&quot;)) {
-    fileURL &lt;- 
-        &quot;https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip&quot;
-    targetURL &lt;- &quot;./data/UCI HAR Dataset.zip&quot;
+if (!file.exists("./data/UCI HAR Dataset")) {
+    fileURL <- 
+        "https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip"
+    targetURL <- "./data/UCI HAR Dataset.zip"
     setInternet2(TRUE)
     download.file(fileURL, destfile = targetURL)
-    unzip(targetURL, exdir=&quot;./data&quot;)
+    unzip(targetURL, exdir="./data")
 }
 
 ## Read all the data files into memory
 
 # Read reference files
-activity_labels &lt;- read.table(&quot;./data/UCI HAR Dataset/activity_labels.txt&quot;, 
-                              header=FALSE, quote=&quot;\&quot;&quot;, 
+activity_labels <- read.table("./data/UCI HAR Dataset/activity_labels.txt", 
+                              header=FALSE, quote="\"", 
                               stringsAsFactors=FALSE)
-features &lt;- read.table(&quot;./data/UCI HAR Dataset/features.txt&quot;,
-                       header=FALSE, quote=&quot;\&quot;&quot;)
+features <- read.table("./data/UCI HAR Dataset/features.txt",
+                       header=FALSE, quote="\"")
 
 # Read training data files
-y_train &lt;- read.table(&quot;./data/UCI HAR Dataset/train/y_train.txt&quot;, 
-                      header=FALSE, quote=&quot;\&quot;&quot;)
-x_train &lt;- read.table(&quot;./data/UCI HAR Dataset/train/X_train.txt&quot;, 
-                      header=FALSE, quote=&quot;\&quot;&quot;)
-subject_train &lt;- read.table(&quot;./data/UCI HAR Dataset/train/subject_train.txt&quot;, 
-                            header=FALSE, quote=&quot;\&quot;&quot;)
+y_train <- read.table("./data/UCI HAR Dataset/train/y_train.txt", 
+                      header=FALSE, quote="\"")
+x_train <- read.table("./data/UCI HAR Dataset/train/X_train.txt", 
+                      header=FALSE, quote="\"")
+subject_train <- read.table("./data/UCI HAR Dataset/train/subject_train.txt", 
+                            header=FALSE, quote="\"")
 
 # Read training Inertial data files
-total_acc_z_train &lt;- 
-    read.table(&quot;./data/UCI HAR Dataset/train/Inertial Signals/total_acc_z_train.txt&quot;,
-               header=FALSE, quote=&quot;\&quot;&quot;)
-total_acc_y_train &lt;- 
-    read.table(&quot;./data/UCI HAR Dataset/train/Inertial Signals/total_acc_y_train.txt&quot;,
-               header=FALSE, quote=&quot;\&quot;&quot;)
-total_acc_x_train &lt;- 
-    read.table(&quot;./data/UCI HAR Dataset/train/Inertial Signals/total_acc_x_train.txt&quot;,
-               header=FALSE, quote=&quot;\&quot;&quot;)
-body_gyro_z_train &lt;- 
-    read.table(&quot;./data/UCI HAR Dataset/train/Inertial Signals/body_gyro_z_train.txt&quot;,
-               header=FALSE, quote=&quot;\&quot;&quot;)
-body_gyro_y_train &lt;- 
-    read.table(&quot;./data/UCI HAR Dataset/train/Inertial Signals/body_gyro_y_train.txt&quot;,
-               header=FALSE, quote=&quot;\&quot;&quot;)
-body_gyro_x_train &lt;- 
-    read.table(&quot;./data/UCI HAR Dataset/train/Inertial Signals/body_gyro_x_train.txt&quot;,
-               header=FALSE, quote=&quot;\&quot;&quot;)
-body_acc_z_train &lt;- 
-    read.table(&quot;./data/UCI HAR Dataset/train/Inertial Signals/body_acc_z_train.txt&quot;,
-               header=FALSE, quote=&quot;\&quot;&quot;)
-body_acc_y_train &lt;- 
-    read.table(&quot;./data/UCI HAR Dataset/train/Inertial Signals/body_acc_y_train.txt&quot;,
-               header=FALSE, quote=&quot;\&quot;&quot;)
-body_acc_x_train &lt;- 
-    read.table(&quot;./data/UCI HAR Dataset/train/Inertial Signals/body_acc_x_train.txt&quot;,
-               header=FALSE, quote=&quot;\&quot;&quot;)
+total_acc_z_train <- 
+    read.table("./data/UCI HAR Dataset/train/Inertial Signals/total_acc_z_train.txt",
+               header=FALSE, quote="\"")
+total_acc_y_train <- 
+    read.table("./data/UCI HAR Dataset/train/Inertial Signals/total_acc_y_train.txt",
+               header=FALSE, quote="\"")
+total_acc_x_train <- 
+    read.table("./data/UCI HAR Dataset/train/Inertial Signals/total_acc_x_train.txt",
+               header=FALSE, quote="\"")
+body_gyro_z_train <- 
+    read.table("./data/UCI HAR Dataset/train/Inertial Signals/body_gyro_z_train.txt",
+               header=FALSE, quote="\"")
+body_gyro_y_train <- 
+    read.table("./data/UCI HAR Dataset/train/Inertial Signals/body_gyro_y_train.txt",
+               header=FALSE, quote="\"")
+body_gyro_x_train <- 
+    read.table("./data/UCI HAR Dataset/train/Inertial Signals/body_gyro_x_train.txt",
+               header=FALSE, quote="\"")
+body_acc_z_train <- 
+    read.table("./data/UCI HAR Dataset/train/Inertial Signals/body_acc_z_train.txt",
+               header=FALSE, quote="\"")
+body_acc_y_train <- 
+    read.table("./data/UCI HAR Dataset/train/Inertial Signals/body_acc_y_train.txt",
+               header=FALSE, quote="\"")
+body_acc_x_train <- 
+    read.table("./data/UCI HAR Dataset/train/Inertial Signals/body_acc_x_train.txt",
+               header=FALSE, quote="\"")
 
 # Read testing data files
-y_test &lt;- read.table(&quot;./data/UCI HAR Dataset/test/y_test.txt&quot;, 
-                      header=FALSE, quote=&quot;\&quot;&quot;)
-x_test &lt;- read.table(&quot;./data/UCI HAR Dataset/test/X_test.txt&quot;, 
-                      header=FALSE, quote=&quot;\&quot;&quot;)
-subject_test &lt;- read.table(&quot;./data/UCI HAR Dataset/test/subject_test.txt&quot;, 
-                            header=FALSE, quote=&quot;\&quot;&quot;)
+y_test <- read.table("./data/UCI HAR Dataset/test/y_test.txt", 
+                      header=FALSE, quote="\"")
+x_test <- read.table("./data/UCI HAR Dataset/test/X_test.txt", 
+                      header=FALSE, quote="\"")
+subject_test <- read.table("./data/UCI HAR Dataset/test/subject_test.txt", 
+                            header=FALSE, quote="\"")
 
 # Read testing Inertial data files
-total_acc_z_test &lt;- 
-    read.table(&quot;./data/UCI HAR Dataset/test/Inertial Signals/total_acc_z_test.txt&quot;,
-               header=FALSE, quote=&quot;\&quot;&quot;)
-total_acc_y_test &lt;- 
-    read.table(&quot;./data/UCI HAR Dataset/test/Inertial Signals/total_acc_y_test.txt&quot;,
-               header=FALSE, quote=&quot;\&quot;&quot;)
-total_acc_x_test &lt;- 
-    read.table(&quot;./data/UCI HAR Dataset/test/Inertial Signals/total_acc_x_test.txt&quot;,
-               header=FALSE, quote=&quot;\&quot;&quot;)
-body_gyro_z_test &lt;- 
-    read.table(&quot;./data/UCI HAR Dataset/test/Inertial Signals/body_gyro_z_test.txt&quot;,
-               header=FALSE, quote=&quot;\&quot;&quot;)
-body_gyro_y_test &lt;- 
-    read.table(&quot;./data/UCI HAR Dataset/test/Inertial Signals/body_gyro_y_test.txt&quot;,
-               header=FALSE, quote=&quot;\&quot;&quot;)
-body_gyro_x_test &lt;- 
-    read.table(&quot;./data/UCI HAR Dataset/test/Inertial Signals/body_gyro_x_test.txt&quot;,
-               header=FALSE, quote=&quot;\&quot;&quot;)
-body_acc_z_test &lt;- 
-    read.table(&quot;./data/UCI HAR Dataset/test/Inertial Signals/body_acc_z_test.txt&quot;,
-               header=FALSE, quote=&quot;\&quot;&quot;)
-body_acc_y_test &lt;- 
-    read.table(&quot;./data/UCI HAR Dataset/test/Inertial Signals/body_acc_y_test.txt&quot;,
-               header=FALSE, quote=&quot;\&quot;&quot;)
-body_acc_x_test &lt;- 
-    read.table(&quot;./data/UCI HAR Dataset/test/Inertial Signals/body_acc_x_test.txt&quot;,
-               header=FALSE, quote=&quot;\&quot;&quot;)
-</code></pre>
+total_acc_z_test <- 
+    read.table("./data/UCI HAR Dataset/test/Inertial Signals/total_acc_z_test.txt",
+               header=FALSE, quote="\"")
+total_acc_y_test <- 
+    read.table("./data/UCI HAR Dataset/test/Inertial Signals/total_acc_y_test.txt",
+               header=FALSE, quote="\"")
+total_acc_x_test <- 
+    read.table("./data/UCI HAR Dataset/test/Inertial Signals/total_acc_x_test.txt",
+               header=FALSE, quote="\"")
+body_gyro_z_test <- 
+    read.table("./data/UCI HAR Dataset/test/Inertial Signals/body_gyro_z_test.txt",
+               header=FALSE, quote="\"")
+body_gyro_y_test <- 
+    read.table("./data/UCI HAR Dataset/test/Inertial Signals/body_gyro_y_test.txt",
+               header=FALSE, quote="\"")
+body_gyro_x_test <- 
+    read.table("./data/UCI HAR Dataset/test/Inertial Signals/body_gyro_x_test.txt",
+               header=FALSE, quote="\"")
+body_acc_z_test <- 
+    read.table("./data/UCI HAR Dataset/test/Inertial Signals/body_acc_z_test.txt",
+               header=FALSE, quote="\"")
+body_acc_y_test <- 
+    read.table("./data/UCI HAR Dataset/test/Inertial Signals/body_acc_y_test.txt",
+               header=FALSE, quote="\"")
+body_acc_x_test <- 
+    read.table("./data/UCI HAR Dataset/test/Inertial Signals/body_acc_x_test.txt",
+               header=FALSE, quote="\"")
+```
+## Generate the metadata for analysis and comparing with information we already have.
+### Information provided in the project
+1.  Number of Participants: 30
+2.  Data apportionment between Training and Test:  70% & 30%
+3.  Number of Feature Domain Variables (with time & frequency): 561
+4.  Number of Activities measured: 9
+5.  Total number of samples (readings/window) for GIRO sensor in body_giro_xyz (3 separate files): 128 per record
+6.  Total number of samples (readings/window) for Acceleration sensor body_acc_xyz (3 separate files): 128 per record
+7.  Total number of samples (readings/window) for Triaxial acceleration from the accelerometer total_acc_xyz (3 separate files): 128 per record
 
-<h2>Generate the metadata for analysis and comparing with information we already have.</h2>
+### Information dervied from above
+1.  Number of Participants in Training (70% of 30 participants0:    21
+2.  Number of Participants in test (30% of 30 participants): 9
 
-<h3>Information provided in the project</h3>
-
-<ol>
-<li> Number of Participants: 30</li>
-<li> Data apportionment between Training and Test:  70% &amp; 30%</li>
-<li> Number of Feature Domain Variables (with time &amp; frequency): 561</li>
-<li> Number of Activities measured: 9</li>
-<li> Total number of samples (readings/window) for GIRO sensor in body_giro_xyz (3 separate files): 128 per record</li>
-<li> Total number of samples (readings/window) for Acceleration sensor body_acc_xyz (3 separate files): 128 per record</li>
-<li> Total number of samples (readings/window) for Triaxial acceleration from the accelerometer total_acc_xyz (3 separate files): 128 per record</li>
-</ol>
-
-<h3>Information dervied from above</h3>
-
-<ol>
-<li> Number of Participants in Training (70% of 30 participants0:    21</li>
-<li> Number of Participants in test (30% of 30 participants): 9</li>
-</ol>
-
-<h3>Metadata that can be derived from the datasets provided</h3>
-
-<p>The following outlines the key observations made on the dataset provided. It does not 
+### Metadata that can be derived from the datasets provided
+The following outlines the key observations made on the dataset provided. It does not 
 contain all observations made, just those that provides the background rationale
 on the assumptions that needs to be made to support the consolidation of the various
-dataset files into a single data file  </p>
+dataset files into a single data file  
 
-<h4>Generating metadata from the first two folder levels of datasets provided</h4>
+#### Generating metadata from the first two folder levels of datasets provided
 
-<pre><code class="r">## Metadata of activity_labels
+```r
+## Metadata of activity_labels
 str(activity_labels)
-</code></pre>
+```
 
-<pre><code>## &#39;data.frame&#39;:    6 obs. of  2 variables:
+```
+## 'data.frame':	6 obs. of  2 variables:
 ##  $ V1: int  1 2 3 4 5 6
-##  $ V2: chr  &quot;WALKING&quot; &quot;WALKING_UPSTAIRS&quot; &quot;WALKING_DOWNSTAIRS&quot; &quot;SITTING&quot; ...
-</code></pre>
+##  $ V2: chr  "WALKING" "WALKING_UPSTAIRS" "WALKING_DOWNSTAIRS" "SITTING" ...
+```
 
-<pre><code class="r">unique(activity_labels)
-</code></pre>
+```r
+unique(activity_labels)
+```
 
-<pre><code>##   V1                 V2
+```
+##   V1                 V2
 ## 1  1            WALKING
 ## 2  2   WALKING_UPSTAIRS
 ## 3  3 WALKING_DOWNSTAIRS
 ## 4  4            SITTING
 ## 5  5           STANDING
 ## 6  6             LAYING
-</code></pre>
+```
 
-<pre><code class="r">## Metadata of features
+```r
+## Metadata of features
 str(features)
-</code></pre>
+```
 
-<pre><code>## &#39;data.frame&#39;:    561 obs. of  2 variables:
+```
+## 'data.frame':	561 obs. of  2 variables:
 ##  $ V1: int  1 2 3 4 5 6 7 8 9 10 ...
-##  $ V2: Factor w/ 477 levels &quot;angle(tBodyAccJerkMean),gravityMean)&quot;,..: 243 244 245 250 251 252 237 238 239 240 ...
-</code></pre>
+##  $ V2: Factor w/ 477 levels "angle(tBodyAccJerkMean),gravityMean)",..: 243 244 245 250 251 252 237 238 239 240 ...
+```
 
-<pre><code class="r">nrow(unique(features))
-</code></pre>
+```r
+nrow(unique(features))
+```
 
-<pre><code>## [1] 561
-</code></pre>
+```
+## [1] 561
+```
 
-<pre><code class="r">## Metadata of x_train and x_test
+```r
+## Metadata of x_train and x_test
 str(x_train)
-</code></pre>
+```
 
-<pre><code>## &#39;data.frame&#39;:    7352 obs. of  561 variables:
+```
+## 'data.frame':	7352 obs. of  561 variables:
 ##  $ V1  : num  0.289 0.278 0.28 0.279 0.277 ...
 ##  $ V2  : num  -0.0203 -0.0164 -0.0195 -0.0262 -0.0166 ...
 ##  $ V3  : num  -0.133 -0.124 -0.113 -0.123 -0.115 ...
@@ -486,12 +287,14 @@ str(x_train)
 ##  $ V98 : num  -1 -1 -1 -1 -1 ...
 ##  $ V99 : num  -1 -1 -1 -1 -1 ...
 ##   [list output truncated]
-</code></pre>
+```
 
-<pre><code class="r">str(x_test)
-</code></pre>
+```r
+str(x_test)
+```
 
-<pre><code>## &#39;data.frame&#39;:    2947 obs. of  561 variables:
+```
+## 'data.frame':	2947 obs. of  561 variables:
 ##  $ V1  : num  0.257 0.286 0.275 0.27 0.275 ...
 ##  $ V2  : num  -0.0233 -0.0132 -0.0261 -0.0326 -0.0278 ...
 ##  $ V3  : num  -0.0147 -0.1191 -0.1182 -0.1175 -0.1295 ...
@@ -592,140 +395,167 @@ str(x_train)
 ##  $ V98 : num  -0.997 -0.999 -0.999 -0.999 -1 ...
 ##  $ V99 : num  -0.997 -0.999 -0.999 -0.999 -1 ...
 ##   [list output truncated]
-</code></pre>
+```
 
-<pre><code class="r">## Percentage of Train and Test observations
+```r
+## Percentage of Train and Test observations
 nrow(x_train)/(nrow(x_train) + nrow(x_test)) * 100
-</code></pre>
+```
 
-<pre><code>## [1] 71.38557
-</code></pre>
+```
+## [1] 71.38557
+```
 
-<pre><code class="r">nrow(x_test)/(nrow(x_train) + nrow(x_test)) * 100
-</code></pre>
+```r
+nrow(x_test)/(nrow(x_train) + nrow(x_test)) * 100
+```
 
-<pre><code>## [1] 28.61443
-</code></pre>
+```
+## [1] 28.61443
+```
 
-<pre><code class="r">## Metadata of y_train and y_test
+```r
+## Metadata of y_train and y_test
 str(y_train)
-</code></pre>
+```
 
-<pre><code>## &#39;data.frame&#39;:    7352 obs. of  1 variable:
+```
+## 'data.frame':	7352 obs. of  1 variable:
 ##  $ V1: int  5 5 5 5 5 5 5 5 5 5 ...
-</code></pre>
+```
 
-<pre><code class="r">str(y_test)
-</code></pre>
+```r
+str(y_test)
+```
 
-<pre><code>## &#39;data.frame&#39;:    2947 obs. of  1 variable:
+```
+## 'data.frame':	2947 obs. of  1 variable:
 ##  $ V1: int  5 5 5 5 5 5 5 5 5 5 ...
-</code></pre>
+```
 
-<pre><code class="r">## Unique values from y_train and y_test
+```r
+## Unique values from y_train and y_test
 unique(y_train)
-</code></pre>
+```
 
-<pre><code>##     V1
+```
+##     V1
 ## 1    5
 ## 28   4
 ## 52   6
 ## 79   1
 ## 126  3
 ## 151  2
-</code></pre>
+```
 
-<pre><code class="r">unique(y_test)
-</code></pre>
+```r
+unique(y_test)
+```
 
-<pre><code>##     V1
+```
+##     V1
 ## 1    5
 ## 32   4
 ## 56   6
 ## 80   1
 ## 110  3
 ## 134  2
-</code></pre>
+```
 
-<pre><code class="r">## Unique values from y_train and y_test
+```r
+## Unique values from y_train and y_test
 length(unique(y_train))
-</code></pre>
+```
 
-<pre><code>## [1] 1
-</code></pre>
+```
+## [1] 1
+```
 
-<pre><code class="r">length(unique(y_test))
-</code></pre>
+```r
+length(unique(y_test))
+```
 
-<pre><code>## [1] 1
-</code></pre>
+```
+## [1] 1
+```
 
-<pre><code class="r">## Metadata of subject_train and subject_test
+```r
+## Metadata of subject_train and subject_test
 str(subject_train)
-</code></pre>
+```
 
-<pre><code>## &#39;data.frame&#39;:    7352 obs. of  1 variable:
+```
+## 'data.frame':	7352 obs. of  1 variable:
 ##  $ V1: int  1 1 1 1 1 1 1 1 1 1 ...
-</code></pre>
+```
 
-<pre><code class="r">str(subject_test)
-</code></pre>
+```r
+str(subject_test)
+```
 
-<pre><code>## &#39;data.frame&#39;:    2947 obs. of  1 variable:
+```
+## 'data.frame':	2947 obs. of  1 variable:
 ##  $ V1: int  2 2 2 2 2 2 2 2 2 2 ...
-</code></pre>
+```
 
-<pre><code class="r">## Unique values from subject_train and subject_test
+```r
+## Unique values from subject_train and subject_test
 unique(subject_train$V1)
-</code></pre>
+```
 
-<pre><code>##  [1]  1  3  5  6  7  8 11 14 15 16 17 19 21 22 23 25 26 27 28 29 30
-</code></pre>
+```
+##  [1]  1  3  5  6  7  8 11 14 15 16 17 19 21 22 23 25 26 27 28 29 30
+```
 
-<pre><code class="r">unique(subject_test$V1)
-</code></pre>
+```r
+unique(subject_test$V1)
+```
 
-<pre><code>## [1]  2  4  9 10 12 13 18 20 24
-</code></pre>
+```
+## [1]  2  4  9 10 12 13 18 20 24
+```
 
-<pre><code class="r">## Number of unique values from subject_train and subject_test
+```r
+## Number of unique values from subject_train and subject_test
 length(unique(subject_train$V1))
-</code></pre>
+```
 
-<pre><code>## [1] 21
-</code></pre>
+```
+## [1] 21
+```
 
-<pre><code class="r">length(unique(subject_test$V1))
-</code></pre>
+```r
+length(unique(subject_test$V1))
+```
 
-<pre><code>## [1] 9
-</code></pre>
+```
+## [1] 9
+```
+### Analysis of Metadata of the first two folder levels of datasets
+1.  "activity_labels" contains all the activities being measured
+2.  There is a unique numeric value (integer) assigned to each activity label - this potentially would be an index value for the activity.  And can be used to link to the data.
+3.  "features" contains all the features being measured or calculated in total 561
+4.  There is a unique numeric value (integer) assigned to each feature - this potentially would be an index value for the feature.  And can be used to link to the data.
+5.  There are 7352 observations and 561 variables in X_train file.  The number of variables matches the number of features being measured or calculated.  However, there is no column headers to denote which column is for which feature.
+6.  There are 2947 observations and 561 variables in X_test file. The number of variables matches the number of features being measured or calculated.   However, there is no column headers to denote which column is for which feature.
+7.  There are **no** potential index values found in both X_train and X_test files, based on sample data shown.
+8.  The number of observations in X_train and X_test files are approximately 70%/30% (respectively) of the total observations made in both files
+9.  There are 7532 obseravtions of 1 variable in y_train, and 2947 observations of 1 variable in y_test file.
+10. There are 6 unique values ranging from 1 to 6 in both y_train and y_test files.  Potentially, each of this would reference the index found in the activity_labels file.
+11. Also, as there are matching number of observations between y_train with x_train, and y_test with x_test, potentially, each observation in the "y" files would match one observation in the "X" files.  However, there are no key in the "X" files to determine which observation in it would match which observation in the "y" files.  An assumption would need to be made here to link these two set of files.
+12.  There are 7352 observations of 1 variable made in subject_train file, and 2947 observations of 1 variable made in the subject_test files.
+10. There are 21 unique values ranging from 1 to 30 in subject_train file, and 9 unique values ranging from 2 to 24.  Given that there are 30 participants in this experiment, potentially, each of these unique value (subject_train and subject_test) refers to a participant.
+11. Also, as there are matching number of observations between the "subject" files with the "X" set of files, potentially each of this observation matches an observation in the "X" set of files.  However, there are no key in the "X" files to determine which observation in it would match the participant identifier in the "subject" files.  An assumption would need to be made here to link these two set of files.  
+  
 
-<h3>Analysis of Metadata of the first two folder levels of datasets</h3>
+#### Generating metadata from the third folder level of datasets provided
 
-<ol>
-<li> &ldquo;activity_labels&rdquo; contains all the activities being measured</li>
-<li> There is a unique numeric value (integer) assigned to each activity label - this potentially would be an index value for the activity.  And can be used to link to the data.</li>
-<li> &ldquo;features&rdquo; contains all the features being measured or calculated in total 561</li>
-<li> There is a unique numeric value (integer) assigned to each feature - this potentially would be an index value for the feature.  And can be used to link to the data.</li>
-<li> There are 7352 observations and 561 variables in X_train file.  The number of variables matches the number of features being measured or calculated.  However, there is no column headers to denote which column is for which feature.</li>
-<li> There are 2947 observations and 561 variables in X_test file. The number of variables matches the number of features being measured or calculated.   However, there is no column headers to denote which column is for which feature.</li>
-<li> There are <strong>no</strong> potential index values found in both X_train and X_test files, based on sample data shown.</li>
-<li> The number of observations in X_train and X_test files are approximately 70%/30% (respectively) of the total observations made in both files</li>
-<li> There are 7532 obseravtions of 1 variable in y_train, and 2947 observations of 1 variable in y_test file.</li>
-<li>There are 6 unique values ranging from 1 to 6 in both y_train and y_test files.  Potentially, each of this would reference the index found in the activity_labels file.</li>
-<li>Also, as there are matching number of observations between y_train with x_train, and y_test with x_test, potentially, each observation in the &ldquo;y&rdquo; files would match one observation in the &ldquo;X&rdquo; files.  However, there are no key in the &ldquo;X&rdquo; files to determine which observation in it would match which observation in the &ldquo;y&rdquo; files.  An assumption would need to be made here to link these two set of files.</li>
-<li> There are 7352 observations of 1 variable made in subject_train file, and 2947 observations of 1 variable made in the subject_test files.</li>
-<li>There are 21 unique values ranging from 1 to 30 in subject_train file, and 9 unique values ranging from 2 to 24.  Given that there are 30 participants in this experiment, potentially, each of these unique value (subject_train and subject_test) refers to a participant.</li>
-<li>Also, as there are matching number of observations between the &ldquo;subject&rdquo; files with the &ldquo;X&rdquo; set of files, potentially each of this observation matches an observation in the &ldquo;X&rdquo; set of files.  However, there are no key in the &ldquo;X&rdquo; files to determine which observation in it would match the participant identifier in the &ldquo;subject&rdquo; files.  An assumption would need to be made here to link these two set of files.<br/></li>
-</ol>
+```r
+str(body_acc_x_train)
+```
 
-<h4>Generating metadata from the third folder level of datasets provided</h4>
-
-<pre><code class="r">str(body_acc_x_train)
-</code></pre>
-
-<pre><code>## &#39;data.frame&#39;:    7352 obs. of  128 variables:
+```
+## 'data.frame':	7352 obs. of  128 variables:
 ##  $ V1  : num  1.81e-04 1.09e-03 3.53e-03 -1.77e-03 8.75e-05 ...
 ##  $ V2  : num  0.010139 0.00455 0.002285 -0.001311 -0.000272 ...
 ##  $ V3  : num  0.009276 0.002879 -0.00042 0.000388 0.001022 ...
@@ -826,12 +656,14 @@ length(unique(subject_train$V1))
 ##  $ V98 : num  -0.004294 -0.001176 0.000124 -0.003518 0.00187 ...
 ##  $ V99 : num  -2.51e-05 -1.96e-03 2.34e-03 -3.20e-03 -2.12e-04 ...
 ##   [list output truncated]
-</code></pre>
+```
 
-<pre><code class="r">str(body_acc_x_test)
-</code></pre>
+```r
+str(body_acc_x_test)
+```
 
-<pre><code>## &#39;data.frame&#39;:    2947 obs. of  128 variables:
+```
+## 'data.frame':	2947 obs. of  128 variables:
 ##  $ V1  : num  0.011653 0.00928 0.005732 0.000452 -0.004362 ...
 ##  $ V2  : num  0.013109 0.00493 0.007066 0.000604 -0.002765 ...
 ##  $ V3  : num  0.01127 0.00395 0.00511 -0.00248 -0.0049 ...
@@ -932,12 +764,14 @@ length(unique(subject_train$V1))
 ##  $ V98 : num  0.00238 0.00427 0.0037 -0.0055 0.00239 ...
 ##  $ V99 : num  0.001828 0.007619 -0.000745 -0.00312 0.001302 ...
 ##   [list output truncated]
-</code></pre>
+```
 
-<pre><code class="r">str(body_acc_y_train)
-</code></pre>
+```r
+str(body_acc_y_train)
+```
 
-<pre><code>## &#39;data.frame&#39;:    7352 obs. of  128 variables:
+```
+## 'data.frame':	7352 obs. of  128 variables:
 ##  $ V1  : num  0.01077 -0.00469 0.00446 -0.01019 -0.00386 ...
 ##  $ V2  : num  0.00658 -0.00749 0.00305 -0.01125 -0.00284 ...
 ##  $ V3  : num  0.00893 -0.00843 0.00178 -0.0122 -0.00309 ...
@@ -1038,12 +872,14 @@ length(unique(subject_train$V1))
 ##  $ V98 : num  0.000322 0.002053 -0.007883 -0.006415 0.006365 ...
 ##  $ V99 : num  -0.00413 0.00554 -0.00952 -0.00298 0.00925 ...
 ##   [list output truncated]
-</code></pre>
+```
 
-<pre><code class="r">str(body_acc_y_test)
-</code></pre>
+```r
+str(body_acc_y_test)
+```
 
-<pre><code>## &#39;data.frame&#39;:    2947 obs. of  128 variables:
+```
+## 'data.frame':	2947 obs. of  128 variables:
 ##  $ V1  : num  -0.0294 0.00665 0.0073 -0.02381 -0.00946 ...
 ##  $ V2  : num  -0.03973 0.01865 0.00733 -0.02205 -0.00867 ...
 ##  $ V3  : num  -0.05241 0.01554 0.00715 -0.0071 -0.00677 ...
@@ -1144,12 +980,14 @@ length(unique(subject_train$V1))
 ##  $ V98 : num  0.007352 -0.000981 -0.003287 -0.011182 -0.003509 ...
 ##  $ V99 : num  0.00515 -0.00127 -0.00305 -0.0123 0.00183 ...
 ##   [list output truncated]
-</code></pre>
+```
 
-<pre><code class="r">str(body_acc_z_train)
-</code></pre>
+```r
+str(body_acc_z_train)
+```
 
-<pre><code>## &#39;data.frame&#39;:    7352 obs. of  128 variables:
+```
+## 'data.frame':	7352 obs. of  128 variables:
 ##  $ V1  : num  0.05556 -0.02686 -0.00591 0.00105 -0.01333 ...
 ##  $ V2  : num  0.05512 -0.0251 -0.00414 0.00123 -0.01495 ...
 ##  $ V3  : num  0.048405 -0.025975 -0.000543 -0.006004 -0.015679 ...
@@ -1250,12 +1088,14 @@ length(unique(subject_train$V1))
 ##  $ V98 : num  -0.01274 0.00844 -0.0108 -0.00606 0.00371 ...
 ##  $ V99 : num  -0.01374 0.00329 -0.01102 -0.00556 0.00198 ...
 ##   [list output truncated]
-</code></pre>
+```
 
-<pre><code class="r">str(body_acc_z_test)
-</code></pre>
+```r
+str(body_acc_z_test)
+```
 
-<pre><code>## &#39;data.frame&#39;:    2947 obs. of  128 variables:
+```
+## 'data.frame':	2947 obs. of  128 variables:
 ##  $ V1  : num  0.10683 -0.02632 0.01021 -0.027 -0.00146 ...
 ##  $ V2  : num  0.15245 -0.02689 0.01341 -0.02255 0.00318 ...
 ##  $ V3  : num  0.21685 -0.03664 0.00365 -0.00265 0.00407 ...
@@ -1356,12 +1196,14 @@ length(unique(subject_train$V1))
 ##  $ V98 : num  -0.00366 -0.01906 0.00887 -0.00536 -0.0112 ...
 ##  $ V99 : num  0.00203 -0.02119 0.00944 -0.00166 -0.00309 ...
 ##   [list output truncated]
-</code></pre>
+```
 
-<pre><code class="r">str(body_gyro_x_train)
-</code></pre>
+```r
+str(body_gyro_x_train)
+```
 
-<pre><code>## &#39;data.frame&#39;:    7352 obs. of  128 variables:
+```
+## 'data.frame':	7352 obs. of  128 variables:
 ##  $ V1  : num  0.0302 0.0171 0.0262 -0.0375 -0.0194 ...
 ##  $ V2  : num  0.0437 0.0242 0.0217 -0.0331 -0.0191 ...
 ##  $ V3  : num  0.0357 0.0302 0.0146 -0.0304 -0.0148 ...
@@ -1462,12 +1304,14 @@ length(unique(subject_train$V1))
 ##  $ V98 : num  0.0092 0.01739 -0.0093 -0.00869 -0.00148 ...
 ##  $ V99 : num  0.01104 0.01837 -0.0068 -0.00747 -0.0033 ...
 ##   [list output truncated]
-</code></pre>
+```
 
-<pre><code class="r">str(body_gyro_x_test)
-</code></pre>
+```r
+str(body_gyro_x_test)
+```
 
-<pre><code>## &#39;data.frame&#39;:    2947 obs. of  128 variables:
+```
+## 'data.frame':	2947 obs. of  128 variables:
 ##  $ V1  : num  0.4375 0.1703 -0.0387 -0.0101 -0.0367 ...
 ##  $ V2  : num  0.46826 0.17522 -0.04728 0.00356 -0.04028 ...
 ##  $ V3  : num  0.49826 0.13086 -0.05391 -0.00848 -0.03995 ...
@@ -1568,12 +1412,14 @@ length(unique(subject_train$V1))
 ##  $ V98 : num  0.0952 -0.0357 0.0356 -0.0778 -0.0358 ...
 ##  $ V99 : num  0.0993 -0.0381 0.0357 -0.0752 -0.0383 ...
 ##   [list output truncated]
-</code></pre>
+```
 
-<pre><code class="r">str(body_gyro_y_train)
-</code></pre>
+```r
+str(body_gyro_y_train)
+```
 
-<pre><code>## &#39;data.frame&#39;:    7352 obs. of  128 variables:
+```
+## 'data.frame':	7352 obs. of  128 variables:
 ##  $ V1  : num  0.066014 0.006123 -0.000238 -0.012886 -0.008612 ...
 ##  $ V2  : num  0.042699 0.00971 -0.000428 -0.016918 -0.008147 ...
 ##  $ V3  : num  0.07485 0.010322 0.000761 -0.016185 -0.005377 ...
@@ -1674,12 +1520,14 @@ length(unique(subject_train$V1))
 ##  $ V98 : num  0.00334 -0.01994 -0.00452 0.00539 0.01302 ...
 ##  $ V99 : num  0.000822 -0.022368 -0.005203 0.003951 0.008912 ...
 ##   [list output truncated]
-</code></pre>
+```
 
-<pre><code class="r">str(body_gyro_y_test)
-</code></pre>
+```r
+str(body_gyro_y_test)
+```
 
-<pre><code>## &#39;data.frame&#39;:    2947 obs. of  128 variables:
+```
+## 'data.frame':	2947 obs. of  128 variables:
 ##  $ V1  : num  0.53135 -0.06137 -0.06025 0.00359 -0.03243 ...
 ##  $ V2  : num  0.7211 -0.0954 -0.0518 0.0246 -0.038 ...
 ##  $ V3  : num  0.5203 -0.1464 -0.0504 0.0227 -0.0427 ...
@@ -1780,12 +1628,14 @@ length(unique(subject_train$V1))
 ##  $ V98 : num  -0.08504 -0.05125 -0.05804 -0.00465 0.0125 ...
 ##  $ V99 : num  -0.09147 -0.04302 -0.05257 -0.00182 0.01538 ...
 ##   [list output truncated]
-</code></pre>
+```
 
-<pre><code class="r">str(body_gyro_z_train)
-</code></pre>
+```r
+str(body_gyro_z_train)
+```
 
-<pre><code>## &#39;data.frame&#39;:    7352 obs. of  128 variables:
+```
+## 'data.frame':	7352 obs. of  128 variables:
 ##  $ V1  : num  0.022859 0.012268 0.002159 -0.000873 -0.001574 ...
 ##  $ V2  : num  0.010316 0.01615 -0.000272 -0.005482 0.000201 ...
 ##  $ V3  : num  0.01325 0.01589 0.00263 -0.00468 -0.00097 ...
@@ -1886,12 +1736,14 @@ length(unique(subject_train$V1))
 ##  $ V98 : num  0.00784 0.00963 -0.00233 -0.0113 -0.01189 ...
 ##  $ V99 : num  0.00819 0.01107 0.00379 -0.01044 -0.01354 ...
 ##   [list output truncated]
-</code></pre>
+```
 
-<pre><code class="r">str(body_gyro_z_test)
-</code></pre>
+```r
+str(body_gyro_z_test)
+```
 
-<pre><code>## &#39;data.frame&#39;:    2947 obs. of  128 variables:
+```
+## 'data.frame':	2947 obs. of  128 variables:
 ##  $ V1  : num  0.1365 0.0551 0.0293 0.0084 0.014 ...
 ##  $ V2  : num  0.09762 0.04334 0.02537 -0.00953 0.02054 ...
 ##  $ V3  : num  0.08356 0.0524 0.02483 0.00178 0.02336 ...
@@ -1992,12 +1844,14 @@ length(unique(subject_train$V1))
 ##  $ V98 : num  0.07519 0.02858 0.04277 -0.00892 -0.02208 ...
 ##  $ V99 : num  0.07559 0.01941 0.039 -0.00843 -0.01589 ...
 ##   [list output truncated]
-</code></pre>
+```
 
-<pre><code class="r">str(total_acc_x_train)
-</code></pre>
+```r
+str(total_acc_x_train)
+```
 
-<pre><code>## &#39;data.frame&#39;:    7352 obs. of  128 variables:
+```
+## 'data.frame':	7352 obs. of  128 variables:
 ##  $ V1  : num  1.01 1.02 1.02 1.02 1.02 ...
 ##  $ V2  : num  1.02 1.02 1.02 1.02 1.02 ...
 ##  $ V3  : num  1.02 1.02 1.02 1.02 1.02 ...
@@ -2098,12 +1952,14 @@ length(unique(subject_train$V1))
 ##  $ V98 : num  1.02 1.02 1.02 1.02 1.02 ...
 ##  $ V99 : num  1.02 1.02 1.02 1.02 1.02 ...
 ##   [list output truncated]
-</code></pre>
+```
 
-<pre><code class="r">str(total_acc_x_test)
-</code></pre>
+```r
+str(total_acc_x_test)
+```
 
-<pre><code>## &#39;data.frame&#39;:    2947 obs. of  128 variables:
+```
+## 'data.frame':	2947 obs. of  128 variables:
 ##  $ V1  : num  1.041 0.999 0.998 0.995 0.988 ...
 ##  $ V2  : num  1.042 0.995 0.999 0.995 0.99 ...
 ##  $ V3  : num  1.039 0.994 0.997 0.992 0.988 ...
@@ -2204,12 +2060,14 @@ length(unique(subject_train$V1))
 ##  $ V98 : num  0.992 0.997 0.997 0.986 0.993 ...
 ##  $ V99 : num  0.992 1.001 0.993 0.988 0.992 ...
 ##   [list output truncated]
-</code></pre>
+```
 
-<pre><code class="r">str(total_acc_y_train)
-</code></pre>
+```r
+str(total_acc_y_train)
+```
 
-<pre><code>## &#39;data.frame&#39;:    7352 obs. of  128 variables:
+```
+## 'data.frame':	7352 obs. of  128 variables:
 ##  $ V1  : num  -0.123 -0.124 -0.12 -0.133 -0.129 ...
 ##  $ V2  : num  -0.127 -0.127 -0.121 -0.134 -0.128 ...
 ##  $ V3  : num  -0.124 -0.128 -0.123 -0.135 -0.128 ...
@@ -2310,12 +2168,14 @@ length(unique(subject_train$V1))
 ##  $ V98 : num  -0.121 -0.123 -0.13 -0.136 -0.126 ...
 ##  $ V99 : num  -0.126 -0.12 -0.131 -0.132 -0.123 ...
 ##   [list output truncated]
-</code></pre>
+```
 
-<pre><code class="r">str(total_acc_y_test)
-</code></pre>
+```r
+str(total_acc_y_test)
+```
 
-<pre><code>## &#39;data.frame&#39;:    2947 obs. of  128 variables:
+```
+## 'data.frame':	2947 obs. of  128 variables:
 ##  $ V1  : num  -0.27 -0.265 -0.264 -0.291 -0.284 ...
 ##  $ V2  : num  -0.28 -0.253 -0.264 -0.289 -0.283 ...
 ##  $ V3  : num  -0.293 -0.257 -0.264 -0.274 -0.281 ...
@@ -2416,12 +2276,14 @@ length(unique(subject_train$V1))
 ##  $ V98 : num  -0.267 -0.268 -0.274 -0.291 -0.293 ...
 ##  $ V99 : num  -0.269 -0.269 -0.273 -0.292 -0.288 ...
 ##   [list output truncated]
-</code></pre>
+```
 
-<pre><code class="r">str(total_acc_z_train)
-</code></pre>
+```r
+str(total_acc_z_train)
+```
 
-<pre><code>## &#39;data.frame&#39;:    7352 obs. of  128 variables:
+```
+## 'data.frame':	7352 obs. of  128 variables:
 ##  $ V1  : num  0.1029 0.0979 0.0911 0.0952 0.0808 ...
 ##  $ V2  : num  0.1057 0.0994 0.0927 0.0954 0.0791 ...
 ##  $ V3  : num  0.1021 0.0981 0.0961 0.0883 0.0783 ...
@@ -2522,12 +2384,14 @@ length(unique(subject_train$V1))
 ##  $ V98 : num  0.0957 0.1015 0.0851 0.0836 0.0882 ...
 ##  $ V99 : num  0.0942 0.0963 0.0849 0.0839 0.0865 ...
 ##   [list output truncated]
-</code></pre>
+```
 
-<pre><code class="r">str(total_acc_z_test)
-</code></pre>
+```r
+str(total_acc_z_test)
+```
 
-<pre><code>## &#39;data.frame&#39;:    2947 obs. of  128 variables:
+```
+## 'data.frame':	2947 obs. of  128 variables:
 ##  $ V1  : num  0.0238 0.1256 0.1508 0.1112 0.1338 ...
 ##  $ V2  : num  0.0763 0.1256 0.1539 0.1155 0.1385 ...
 ##  $ V3  : num  0.147 0.116 0.144 0.135 0.139 ...
@@ -2628,185 +2492,179 @@ length(unique(subject_train$V1))
 ##  $ V98 : num  0.144 0.122 0.143 0.13 0.115 ...
 ##  $ V99 : num  0.15 0.12 0.144 0.133 0.123 ...
 ##   [list output truncated]
-</code></pre>
+```
 
-<h3>Analysis of Metadata of the third folder level of datasets</h3>
+### Analysis of Metadata of the third folder level of datasets
+1.  There are 3 sets of files here, each represent either an X, Y, or Z axis of the gyro, accelerator (body estimate) and acceleration(triaxial)
+2.  Each of the 9 files in "train" folder and 9 files in "test" folder consist of 128 columns - potentially representing each of the sample taken in a reading window.
+3.  There are 7352 observations in each of 9 files in "train" folder, and 2947 observations in each of the 9 files in the "test" folder.  Potentially, each record matches one observation in the "X" files found in the second folder level of datasets. However, there also no identifiers available to match the records.
 
-<ol>
-<li> There are 3 sets of files here, each represent either an X, Y, or Z axis of the gyro, accelerator (body estimate) and acceleration(triaxial)</li>
-<li> Each of the 9 files in &ldquo;train&rdquo; folder and 9 files in &ldquo;test&rdquo; folder consist of 128 columns - potentially representing each of the sample taken in a reading window.</li>
-<li> There are 7352 observations in each of 9 files in &ldquo;train&rdquo; folder, and 2947 observations in each of the 9 files in the &ldquo;test&rdquo; folder.  Potentially, each record matches one observation in the &ldquo;X&rdquo; files found in the second folder level of datasets. However, there also no identifiers available to match the records.</li>
-</ol>
+## Assumptions for combining the datasets into a file (based on the above observations)
+1.  The 561 columns in the "X" set of files are measurements of the features found in features data, and each column number corresponds to each row number in the features data.  That is, column 1 in a "X" file is the measure for row 1 in the "features" file, column 2 in "X" file is the measure for row 2 in the "features" file, and so forth until column 561 in a "X" file is the measure for row 561 in the "features" file.
+2.  The values in "y" files corresponds to the "index" value found in the activity_label file. For example, if the value in a "y" file (column 1) is 5, it refers to the activity "STANDING", or a value of 2 would refer to the activity "WALKING_UPSTAIRS", and so forth.
+3.  As there are no matching key to link the X and Y files, and given that the number of observations in the "y" files corresponds to the number of observations in the "X" files, it is assumed that each row (number) of observation in "X" files corresponds to the same row (number) of observation in "y" file.  So row 1 of X_train would correspond (and linked) to row 1 of y_train.
+4.  Given that there are 30 unique values in the "subject" files, each unique value refers to the participant identifier.
+5.  As there are no matching key to link the X and Y files, and given that the number of observations in the "subject files corresponds to the number of observations in "X" files, it is assumed that each row in "subject" files corresponds (and linked) to the same row in "X" files.  That is row 1 in subject_train would correspond to row 1 in X_train, and so forth.
+6.  As there are 128 columns in the files from the third level folders (Inertial), and there are 128 reading/windows, it is assumed that each column refers to a reading/window for that sensor axis of x, y, and z.
+7.  As there are the same number of observations for each of the files to the number of observations in the respective "X" files (X_train and X_test), it is assumed that each row in these Inertial files corresponds (and linked to ) each row in their respective "X" files.
 
-<h2>Assumptions for combining the datasets into a file (based on the above observations)</h2>
+## Resulting Design for the single data file
+The resulting combined file would consist of the following columns:  
+1.  Participant ID (1) - from "subject" files,  
+2.  Activity (1) - from "y" files,  
+3.  Features (561) - from "X" files,  
+4.  Body_Giro (128 x 3) - from "body_giro_" x, y, and z files,  
+5.  Body_Acc (128 x 3) - from "body_acc_" x, y, and z files,  
+6.  Total_Acc (128 x 3) - from "total_acc_" x, y and z files  
+  
+In total, there will be 1715 columns.
+  
+The total number of observations would be 7352 + 2947 = 10299 observations  
+  
+The following R code provides the code to combine the files based on the above design:
 
-<ol>
-<li> The 561 columns in the &ldquo;X&rdquo; set of files are measurements of the features found in features data, and each column number corresponds to each row number in the features data.  That is, column 1 in a &ldquo;X&rdquo; file is the measure for row 1 in the &ldquo;features&rdquo; file, column 2 in &ldquo;X&rdquo; file is the measure for row 2 in the &ldquo;features&rdquo; file, and so forth until column 561 in a &ldquo;X&rdquo; file is the measure for row 561 in the &ldquo;features&rdquo; file.</li>
-<li> The values in &ldquo;y&rdquo; files corresponds to the &ldquo;index&rdquo; value found in the activity_label file. For example, if the value in a &ldquo;y&rdquo; file (column 1) is 5, it refers to the activity &ldquo;STANDING&rdquo;, or a value of 2 would refer to the activity &ldquo;WALKING_UPSTAIRS&rdquo;, and so forth.</li>
-<li> As there are no matching key to link the X and Y files, and given that the number of observations in the &ldquo;y&rdquo; files corresponds to the number of observations in the &ldquo;X&rdquo; files, it is assumed that each row (number) of observation in &ldquo;X&rdquo; files corresponds to the same row (number) of observation in &ldquo;y&rdquo; file.  So row 1 of X_train would correspond (and linked) to row 1 of y_train.</li>
-<li> Given that there are 30 unique values in the &ldquo;subject&rdquo; files, each unique value refers to the participant identifier.</li>
-<li> As there are no matching key to link the X and Y files, and given that the number of observations in the &ldquo;subject files corresponds to the number of observations in &quot;X&rdquo; files, it is assumed that each row in &ldquo;subject&rdquo; files corresponds (and linked) to the same row in &ldquo;X&rdquo; files.  That is row 1 in subject_train would correspond to row 1 in X_train, and so forth.</li>
-<li> As there are 128 columns in the files from the third level folders (Inertial), and there are 128 reading/windows, it is assumed that each column refers to a reading/window for that sensor axis of x, y, and z.</li>
-<li> As there are the same number of observations for each of the files to the number of observations in the respective &ldquo;X&rdquo; files (X_train and X_test), it is assumed that each row in these Inertial files corresponds (and linked to ) each row in their respective &ldquo;X&rdquo; files.</li>
-</ol>
-
-<h2>Resulting Design for the single data file</h2>
-
-<p>The resulting combined file would consist of the following columns:<br/>
-1.  Participant ID (1) - from &ldquo;subject&rdquo; files,<br/>
-2.  Activity (1) - from &ldquo;y&rdquo; files,<br/>
-3.  Features (561) - from &ldquo;X&rdquo; files,<br/>
-4.  Body<em>Giro (128 x 3) - from &ldquo;body_giro</em>&rdquo; x, y, and z files,<br/>
-5.  Body<em>Acc (128 x 3) - from &ldquo;body_acc</em>&rdquo; x, y, and z files,<br/>
-6.  Total<em>Acc (128 x 3) - from &ldquo;total_acc</em>&rdquo; x, y and z files  </p>
-
-<p>In total, there will be 1715 columns.</p>
-
-<p>The total number of observations would be 7352 + 2947 = 10299 observations  </p>
-
-<p>The following R code provides the code to combine the files based on the above design:</p>
-
-<pre><code class="r">## Common functions to be used
+```r
+## Common functions to be used
 
 # Set names
-set_colnames &lt;- function (x, newnames) {
-    oldnames &lt;- names(x)
+set_colnames <- function (x, newnames) {
+    oldnames <- names(x)
     setnames(x, oldnames, newnames)
 }
 
 # Merge data frames
-merge_by_row &lt;- function(x, y, ...) {
-    add_id &lt;- function(data) {
+merge_by_row <- function(x, y, ...) {
+    add_id <- function(data) {
         data.frame(data, rec_id = seq_len(nrow(data)))
     }
-    remove_id &lt;- function(data) {
-        data_col &lt;- colnames(data) != &quot;rec_id&quot;
+    remove_id <- function(data) {
+        data_col <- colnames(data) != "rec_id"
         data[, data_col]
     }
-    tmp_x &lt;- add_id(x)
-    tmp_y &lt;- add_id(y)
-    tmp_xy &lt;- merge(tmp_x, tmp_y)
+    tmp_x <- add_id(x)
+    tmp_y <- add_id(y)
+    tmp_xy <- merge(tmp_x, tmp_y)
     remove_id(tmp_xy)
 }
 
 ## Start by setting the column names first for the key datasets
-set_colnames(subject_train, &quot;Participant_ID&quot;)
-set_colnames(subject_test, &quot;Participant_ID&quot;)
+set_colnames(subject_train, "Participant_ID")
+set_colnames(subject_test, "Participant_ID")
 
-set_colnames(y_train, &quot;Activity&quot;)
-set_colnames(y_test, &quot;Activity&quot;)
+set_colnames(y_train, "Activity")
+set_colnames(y_test, "Activity")
 
-## Strip away special characters in features&#39; names
-feature_names &lt;- features
-feature_names$V2 &lt;- gsub(&quot;\\(\\)&quot;, &quot;_&quot;, feature_names$V2)
-feature_names$V2 &lt;- gsub(&quot;\\(&quot;, &quot;_&quot;, feature_names$V2)
-feature_names$V2 &lt;- gsub(&quot;\\)&quot;, &quot;_&quot;, feature_names$V2)
-feature_names$V2 &lt;- gsub(&quot;-&quot;, &quot;_&quot;, feature_names$V2)
-feature_names$V2 &lt;- gsub(&quot;,&quot;, &quot;_&quot;, feature_names$V2)
+## Strip away special characters in features' names
+feature_names <- features
+feature_names$V2 <- gsub("\\(\\)", "_", feature_names$V2)
+feature_names$V2 <- gsub("\\(", "_", feature_names$V2)
+feature_names$V2 <- gsub("\\)", "_", feature_names$V2)
+feature_names$V2 <- gsub("-", "_", feature_names$V2)
+feature_names$V2 <- gsub(",", "_", feature_names$V2)
 
 set_colnames(x_train, as.vector(feature_names$V2))
 set_colnames(x_test, as.vector(feature_names$V2))
 
-inertial_labels &lt;-  as.vector(paste(&quot;body_gyro_x_&quot;, as.character(seq_len(128)), sep=&quot;&quot;))
+inertial_labels <-  as.vector(paste("body_gyro_x_", as.character(seq_len(128)), sep=""))
 set_colnames(body_gyro_x_train, inertial_labels)
 set_colnames(body_gyro_x_test, inertial_labels)
 
-inertial_labels &lt;-  as.vector(paste(&quot;body_gyro_y_&quot;, as.character(seq_len(128)), sep=&quot;&quot;))
+inertial_labels <-  as.vector(paste("body_gyro_y_", as.character(seq_len(128)), sep=""))
 set_colnames(body_gyro_y_train, inertial_labels)
 set_colnames(body_gyro_y_test, inertial_labels)
 
-inertial_labels &lt;-  as.vector(paste(&quot;body_gyro_z_&quot;, as.character(seq_len(128)), sep=&quot;&quot;))
+inertial_labels <-  as.vector(paste("body_gyro_z_", as.character(seq_len(128)), sep=""))
 set_colnames(body_gyro_z_train, inertial_labels)
 set_colnames(body_gyro_z_test, inertial_labels)
 
-inertial_labels &lt;-  as.vector(paste(&quot;body_acc_x_&quot;, as.character(seq_len(128)), sep=&quot;&quot;))
+inertial_labels <-  as.vector(paste("body_acc_x_", as.character(seq_len(128)), sep=""))
 set_colnames(body_acc_x_train, inertial_labels)
 set_colnames(body_acc_x_test, inertial_labels)
 
-inertial_labels &lt;-  as.vector(paste(&quot;body_acc_y_&quot;, as.character(seq_len(128)), sep=&quot;&quot;))
+inertial_labels <-  as.vector(paste("body_acc_y_", as.character(seq_len(128)), sep=""))
 set_colnames(body_acc_y_train, inertial_labels)
 set_colnames(body_acc_y_test, inertial_labels)
 
-inertial_labels &lt;-  as.vector(paste(&quot;body_acc_z_&quot;, as.character(seq_len(128)), sep=&quot;&quot;))
+inertial_labels <-  as.vector(paste("body_acc_z_", as.character(seq_len(128)), sep=""))
 set_colnames(body_acc_z_train, inertial_labels)
 set_colnames(body_acc_z_test, inertial_labels)
 
-inertial_labels &lt;-  as.vector(paste(&quot;total_acc_x_&quot;, as.character(seq_len(128)), sep=&quot;&quot;))
+inertial_labels <-  as.vector(paste("total_acc_x_", as.character(seq_len(128)), sep=""))
 set_colnames(total_acc_x_train, inertial_labels)
 set_colnames(total_acc_x_test, inertial_labels)
 
-inertial_labels &lt;-  as.vector(paste(&quot;total_acc_y_&quot;, as.character(seq_len(128)), sep=&quot;&quot;))
+inertial_labels <-  as.vector(paste("total_acc_y_", as.character(seq_len(128)), sep=""))
 set_colnames(total_acc_y_train, inertial_labels)
 set_colnames(total_acc_y_test, inertial_labels)
 
-inertial_labels &lt;-  as.vector(paste(&quot;total_acc_z_&quot;, as.character(seq_len(128)), sep=&quot;&quot;))
+inertial_labels <-  as.vector(paste("total_acc_z_", as.character(seq_len(128)), sep=""))
 set_colnames(total_acc_z_train, inertial_labels)
 set_colnames(total_acc_z_test, inertial_labels)
 
 ## Merge all the training data
-merge_df_train &lt;- merge_by_row (subject_train, y_train)
-merge_df_train &lt;- merge_by_row (merge_df_train, x_train)
-merge_df_train &lt;- merge_by_row (merge_df_train, body_gyro_x_train)
-merge_df_train &lt;- merge_by_row (merge_df_train, body_gyro_y_train)
-merge_df_train &lt;- merge_by_row (merge_df_train, body_gyro_z_train)
-merge_df_train &lt;- merge_by_row (merge_df_train, body_acc_x_train)
-merge_df_train &lt;- merge_by_row (merge_df_train, body_acc_y_train)
-merge_df_train &lt;- merge_by_row (merge_df_train, body_acc_z_train)
-merge_df_train &lt;- merge_by_row (merge_df_train, total_acc_x_train)
-merge_df_train &lt;- merge_by_row (merge_df_train, total_acc_y_train)
-merge_df_train &lt;- merge_by_row (merge_df_train, total_acc_z_train)
+merge_df_train <- merge_by_row (subject_train, y_train)
+merge_df_train <- merge_by_row (merge_df_train, x_train)
+merge_df_train <- merge_by_row (merge_df_train, body_gyro_x_train)
+merge_df_train <- merge_by_row (merge_df_train, body_gyro_y_train)
+merge_df_train <- merge_by_row (merge_df_train, body_gyro_z_train)
+merge_df_train <- merge_by_row (merge_df_train, body_acc_x_train)
+merge_df_train <- merge_by_row (merge_df_train, body_acc_y_train)
+merge_df_train <- merge_by_row (merge_df_train, body_acc_z_train)
+merge_df_train <- merge_by_row (merge_df_train, total_acc_x_train)
+merge_df_train <- merge_by_row (merge_df_train, total_acc_y_train)
+merge_df_train <- merge_by_row (merge_df_train, total_acc_z_train)
 
 ## Merge all the testing data
-merge_df_test &lt;- merge_by_row (subject_test, y_test)
-merge_df_test &lt;- merge_by_row (merge_df_test, x_test)
-merge_df_test &lt;- merge_by_row (merge_df_test, body_gyro_x_test)
-merge_df_test &lt;- merge_by_row (merge_df_test, body_gyro_y_test)
-merge_df_test &lt;- merge_by_row (merge_df_test, body_gyro_z_test)
-merge_df_test &lt;- merge_by_row (merge_df_test, body_acc_x_test)
-merge_df_test &lt;- merge_by_row (merge_df_test, body_acc_y_test)
-merge_df_test &lt;- merge_by_row (merge_df_test, body_acc_z_test)
-merge_df_test &lt;- merge_by_row (merge_df_test, total_acc_x_test)
-merge_df_test &lt;- merge_by_row (merge_df_test, total_acc_y_test)
-merge_df_test &lt;- merge_by_row (merge_df_test, total_acc_z_test)
+merge_df_test <- merge_by_row (subject_test, y_test)
+merge_df_test <- merge_by_row (merge_df_test, x_test)
+merge_df_test <- merge_by_row (merge_df_test, body_gyro_x_test)
+merge_df_test <- merge_by_row (merge_df_test, body_gyro_y_test)
+merge_df_test <- merge_by_row (merge_df_test, body_gyro_z_test)
+merge_df_test <- merge_by_row (merge_df_test, body_acc_x_test)
+merge_df_test <- merge_by_row (merge_df_test, body_acc_y_test)
+merge_df_test <- merge_by_row (merge_df_test, body_acc_z_test)
+merge_df_test <- merge_by_row (merge_df_test, total_acc_x_test)
+merge_df_test <- merge_by_row (merge_df_test, total_acc_y_test)
+merge_df_test <- merge_by_row (merge_df_test, total_acc_z_test)
 
 ## Merge both Train and Test files into a single dataset
 
-merge_list &lt;- list(merge_df_train, merge_df_test)
-merge_df_all &lt;- rbindlist(merge_list)
-</code></pre>
+merge_list <- list(merge_df_train, merge_df_test)
+merge_df_all <- rbindlist(merge_list)
+```
+The merged  training and the test sets in the one data set: merge_df_all.
 
-<p>The merged  training and the test sets in the one data set: merge_df_all.</p>
+Extracting only the measurements on the mean and standard deviation for each measurement.
 
-<p>Extracting only the measurements on the mean and standard deviation for each measurement.</p>
+```r
+## Retrieve columns that are means or standard deviations (std)\
 
-<pre><code class="r">## Retrieve columns that are means or standard deviations (std)\
+mean_std_col <- names(merge_df_all)[grepl("mean", names(merge_df_all), ignore.case = TRUE) | grepl("std", names(merge_df_all), ignore.case = TRUE)]
 
-mean_std_col &lt;- names(merge_df_all)[grepl(&quot;mean&quot;, names(merge_df_all), ignore.case = TRUE) | grepl(&quot;std&quot;, names(merge_df_all), ignore.case = TRUE)]
+mean_std_col <- c("Participant_ID", "Activity", mean_std_col)
 
-mean_std_col &lt;- c(&quot;Participant_ID&quot;, &quot;Activity&quot;, mean_std_col)
+merge_df_select <- select(merge_df_all, one_of(mean_std_col))
+```
+The extracted measurements on the mean and standard deviation is now in the data set: merge_df_select.
 
-merge_df_select &lt;- select(merge_df_all, one_of(mean_std_col))
-</code></pre>
 
-<p>The extracted measurements on the mean and standard deviation is now in the data set: merge_df_select.</p>
+Changing the numeric activity values to appropriate labels found in activity_labels.  Assuming that 
+each number corresponds to number in that file. 
 
-<p>Changing the numeric activity values to appropriate labels found in activity_labels.  Assuming that 
-each number corresponds to number in that file. </p>
 
-<pre><code class="r">## Appropriately labels the data set with descriptive variable names. 
-merge_df_select$Activity &lt;- activity_labels[merge_df_select$Activity, ]$V2
-</code></pre>
+```r
+## Appropriately labels the data set with descriptive variable names. 
+merge_df_select$Activity <- activity_labels[merge_df_select$Activity, ]$V2
+```
 
-<p>Creating a new tidy data set with the average of each variable for each activity and each subject</p>
+Creating a new tidy data set with the average of each variable for each activity and each subject
 
-<pre><code class="r">## Creates an independent tidy data set with the average of each variable for each activity and each subject.
 
-merge_select_means &lt;- merge_df_select %&gt;% group_by(Participant_ID, Activity) %&gt;%
+```r
+## Creates an independent tidy data set with the average of each variable for each activity and each subject.
+
+merge_select_means <- merge_df_select %>% group_by(Participant_ID, Activity) %>%
     summarise_each(funs(mean))
-</code></pre>
+```
+The new dataset is: merge_tidy.txt.   
 
-<p>The new dataset is: merge_tidy.txt.   </p>
-
-</body>
-
-</html>
