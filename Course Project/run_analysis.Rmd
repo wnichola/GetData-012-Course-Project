@@ -17,6 +17,19 @@ As there are no proper column labels or documentation on the data contained with
 ## Load the libraries
 library(data.table)
 library(dplyr)
+library(RCurl)
+
+## Download the file from the URL provided in the project brief
+if (!file.exists("./data")) file.create("./data")
+
+if (!file.exists("./data/UCI HAR Dataset")) {
+    fileURL <- 
+        "https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip"
+    targetURL <- "./data/UCI HAR Dataset.zip"
+    setInternet2(TRUE)
+    download.file(fileURL, destfile = targetURL)
+    unzip(targetURL, exdir="./data")
+}
 
 ## Read all the data files into memory
 

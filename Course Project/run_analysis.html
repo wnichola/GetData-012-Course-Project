@@ -92,7 +92,21 @@ library(dplyr)</code></pre>
 ## The following objects are masked from 'package:base':
 ## 
 ##     intersect, setdiff, setequal, union</code></pre>
-<pre class="r"><code>## Read all the data files into memory
+<pre class="r"><code>library(RCurl)</code></pre>
+<pre><code>## Loading required package: bitops</code></pre>
+<pre class="r"><code>## Download the file from the URL provided in the project brief
+if (!file.exists(&quot;./data&quot;)) file.create(&quot;./data&quot;)
+
+if (!file.exists(&quot;./data/UCI HAR Dataset&quot;)) {
+    fileURL &lt;- 
+        &quot;https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip&quot;
+    targetURL &lt;- &quot;./data/UCI HAR Dataset.zip&quot;
+    setInternet2(TRUE)
+    download.file(fileURL, destfile = targetURL)
+    unzip(targetURL, exdir=&quot;./data&quot;)
+}
+
+## Read all the data files into memory
 
 # Read reference files
 activity_labels &lt;- read.table(&quot;./data/UCI HAR Dataset/activity_labels.txt&quot;, 
