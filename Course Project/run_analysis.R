@@ -199,8 +199,8 @@ merge_by_row <- function(x, y, ...) {
 }
 
 ## Start by setting the column names first for the key datasets
-set_colnames(subject_train, "Participant_ID")
-set_colnames(subject_test, "Participant_ID")
+set_colnames(subject_train, "Subject_ID")
+set_colnames(subject_test, "Subject_ID")
 
 set_colnames(y_train, "Activity")
 set_colnames(y_test, "Activity")
@@ -297,7 +297,7 @@ merge_df_all <- rbindlist(merge_list)
 
 mean_std_col <- names(merge_df_all)[grepl("mean", names(merge_df_all), ignore.case = TRUE) | grepl("std", names(merge_df_all), ignore.case = TRUE)]
 
-mean_std_col <- c("Participant_ID", "Activity", mean_std_col)
+mean_std_col <- c("Subject_ID", "Activity", mean_std_col)
 
 merge_df_select <- select(merge_df_all, one_of(mean_std_col))
 
@@ -319,7 +319,7 @@ merge_df_select$Activity <- activity_labels[merge_df_select$Activity, ]$V2
 
 ## Creates an independent tidy data set with the average of each variable for each activity and each subject.
 
-merge_select_means <- merge_df_select %>% group_by(Participant_ID, Activity) %>%
+merge_select_means <- merge_df_select %>% group_by(Subject_ID, Activity) %>%
     summarise_each(funs(mean))
 
 
