@@ -1,8 +1,8 @@
 ## Data Dictionary for merge_tidy.txt
 
 # Attribute
-Subject_ID
-    Identifer of the Subject who carried out the experiment
+Subject_ID  
+    Identifer of the Subject who carried out the experiment  
 Activity
     Activity carried out by the Subject
 tBodyAcc_mean__X
