@@ -323,14 +323,12 @@ merge_select_means <- merge_df_select %>% group_by(Subject_ID, Activity) %>%
     summarise_each(funs(mean))
 
 
-## ----echo = FALSE--------------------------------------------------------
+## ------------------------------------------------------------------------
 
 ## print(merge_select_means)
 # write.csv(merge_select_means, file="merge_select_means.csv", quote=FALSE)
 
 ## Instead the following file would be created for submission: merge_tidy.txt
 write.table(merge_select_means, file="merge_tidy.txt", row.name=FALSE)
-
-## Please refer to the codebook run_analysis.html for how this file is finally created.
 
 

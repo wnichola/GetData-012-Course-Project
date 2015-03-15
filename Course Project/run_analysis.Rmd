@@ -419,7 +419,7 @@ merge_select_means <- merge_df_select %>% group_by(Subject_ID, Activity) %>%
 The new dataset is: merge_tidy.txt.  
 This file contains all the averages of the means and standard deviations of all the features of accelertion, gyro, jerk, etc, group by the Subject and the Activity.
   
-```{r echo = FALSE}
+```{r}
 
 ## print(merge_select_means)
 # write.csv(merge_select_means, file="merge_select_means.csv", quote=FALSE)

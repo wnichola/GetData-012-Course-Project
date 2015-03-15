@@ -116,7 +116,7 @@ body_acc_x_test <-
 ```
 ## Generate the metadata for analysis and comparing with information we already have.
 ### Information provided in the project
-1.  Number of Participants: 30
+1.  Number of Subjects: 30
 2.  Data apportionment between Training and Test:  70% & 30%
 3.  Number of Feature Domain Variables (with time & frequency): 561
 4.  Number of Activities measured: 9
@@ -125,8 +125,8 @@ body_acc_x_test <-
 7.  Total number of samples (readings/window) for Triaxial acceleration from the accelerometer total_acc_xyz (3 separate files): 128 per record
 
 ### Information dervied from above
-1.  Number of Participants in Training (70% of 30 participants0:    21
-2.  Number of Participants in test (30% of 30 participants): 9
+1.  Number of Subjects in Training (70% of 30 Subjects):    21
+2.  Number of Subjects in test (30% of 30 Subjects): 9
 
 ### Metadata that can be derived from the datasets provided
 The following outlines the key observations made on the dataset provided. It does not 
@@ -435,7 +435,7 @@ str(y_test)
 
 ```r
 ## Unique values from y_train and y_test
-unique(y_train)
+unique(y_train)         # If values matches those in activities_labels, this could be the Activities
 ```
 
 ```
@@ -464,19 +464,19 @@ unique(y_test)
 
 ```r
 ## Unique values from y_train and y_test
-length(unique(y_train))
+nrow(unique(y_train))   # If it is 6 unique observation, this could be the Activities
 ```
 
 ```
-## [1] 1
+## [1] 6
 ```
 
 ```r
-length(unique(y_test))
+nrow(unique(y_test))    
 ```
 
 ```
-## [1] 1
+## [1] 6
 ```
 
 ```r
@@ -500,7 +500,7 @@ str(subject_test)
 
 ```r
 ## Unique values from subject_train and subject_test
-unique(subject_train$V1)
+unique(subject_train$V1)    # Are values between 1 to 30? If so, these are the subjects
 ```
 
 ```
@@ -544,8 +544,8 @@ length(unique(subject_test$V1))
 10. There are 6 unique values ranging from 1 to 6 in both y_train and y_test files.  Potentially, each of this would reference the index found in the activity_labels file.
 11. Also, as there are matching number of observations between y_train with x_train, and y_test with x_test, potentially, each observation in the "y" files would match one observation in the "X" files.  However, there are no key in the "X" files to determine which observation in it would match which observation in the "y" files.  An assumption would need to be made here to link these two set of files.
 12.  There are 7352 observations of 1 variable made in subject_train file, and 2947 observations of 1 variable made in the subject_test files.
-10. There are 21 unique values ranging from 1 to 30 in subject_train file, and 9 unique values ranging from 2 to 24.  Given that there are 30 participants in this experiment, potentially, each of these unique value (subject_train and subject_test) refers to a participant.
-11. Also, as there are matching number of observations between the "subject" files with the "X" set of files, potentially each of this observation matches an observation in the "X" set of files.  However, there are no key in the "X" files to determine which observation in it would match the participant identifier in the "subject" files.  An assumption would need to be made here to link these two set of files.  
+10. There are 21 unique values ranging from 1 to 30 in subject_train file, and 9 unique values ranging from 2 to 24.  Given that there are 30 Subjects in this experiment, potentially, each of these unique value (subject_train and subject_test) refers to a Subject.
+11. Also, as there are matching number of observations between the "subject" files with the "X" set of files, potentially each of this observation matches an observation in the "X" set of files.  However, there are no key in the "X" files to determine which observation in it would match the Subject identifier in the "subject" files.  An assumption would need to be made here to link these two set of files.  
   
 
 #### Generating metadata from the third folder level of datasets provided
@@ -2503,14 +2503,14 @@ str(total_acc_z_test)
 1.  The 561 columns in the "X" set of files are measurements of the features found in features data, and each column number corresponds to each row number in the features data.  That is, column 1 in a "X" file is the measure for row 1 in the "features" file, column 2 in "X" file is the measure for row 2 in the "features" file, and so forth until column 561 in a "X" file is the measure for row 561 in the "features" file.
 2.  The values in "y" files corresponds to the "index" value found in the activity_label file. For example, if the value in a "y" file (column 1) is 5, it refers to the activity "STANDING", or a value of 2 would refer to the activity "WALKING_UPSTAIRS", and so forth.
 3.  As there are no matching key to link the X and Y files, and given that the number of observations in the "y" files corresponds to the number of observations in the "X" files, it is assumed that each row (number) of observation in "X" files corresponds to the same row (number) of observation in "y" file.  So row 1 of X_train would correspond (and linked) to row 1 of y_train.
-4.  Given that there are 30 unique values in the "subject" files, each unique value refers to the participant identifier.
+4.  Given that there are 30 unique values in the "subject" files, each unique value refers to the Subject identifier.
 5.  As there are no matching key to link the X and Y files, and given that the number of observations in the "subject files corresponds to the number of observations in "X" files, it is assumed that each row in "subject" files corresponds (and linked) to the same row in "X" files.  That is row 1 in subject_train would correspond to row 1 in X_train, and so forth.
 6.  As there are 128 columns in the files from the third level folders (Inertial), and there are 128 reading/windows, it is assumed that each column refers to a reading/window for that sensor axis of x, y, and z.
 7.  As there are the same number of observations for each of the files to the number of observations in the respective "X" files (X_train and X_test), it is assumed that each row in these Inertial files corresponds (and linked to ) each row in their respective "X" files.
 
 ## Resulting Design for the single data file
 The resulting combined file would consist of the following columns:  
-1.  Participant ID (1) - from "subject" files,  
+1.  Subject ID (1) - from "subject" files,  
 2.  Activity (1) - from "y" files,  
 3.  Features (561) - from "X" files,  
 4.  Body_Giro (128 x 3) - from "body_giro_" x, y, and z files,  
@@ -2548,8 +2548,8 @@ merge_by_row <- function(x, y, ...) {
 }
 
 ## Start by setting the column names first for the key datasets
-set_colnames(subject_train, "Participant_ID")
-set_colnames(subject_test, "Participant_ID")
+set_colnames(subject_train, "Subject_ID")
+set_colnames(subject_test, "Subject_ID")
 
 set_colnames(y_train, "Activity")
 set_colnames(y_test, "Activity")
@@ -2634,14 +2634,15 @@ merge_df_all <- rbindlist(merge_list)
 ```
 The merged  training and the test sets in the one data set: merge_df_all.
 
-Extracting only the measurements on the mean and standard deviation for each measurement.
+Extracting only the measurements on the mean and standard deviation for each measurement for all the features, such as acceleration, angle, jerk, etc..
+
 
 ```r
 ## Retrieve columns that are means or standard deviations (std)\
 
 mean_std_col <- names(merge_df_all)[grepl("mean", names(merge_df_all), ignore.case = TRUE) | grepl("std", names(merge_df_all), ignore.case = TRUE)]
 
-mean_std_col <- c("Participant_ID", "Activity", mean_std_col)
+mean_std_col <- c("Subject_ID", "Activity", mean_std_col)
 
 merge_df_select <- select(merge_df_all, one_of(mean_std_col))
 ```
@@ -2663,8 +2664,23 @@ Creating a new tidy data set with the average of each variable for each activity
 ```r
 ## Creates an independent tidy data set with the average of each variable for each activity and each subject.
 
-merge_select_means <- merge_df_select %>% group_by(Participant_ID, Activity) %>%
+merge_select_means <- merge_df_select %>% group_by(Subject_ID, Activity) %>%
     summarise_each(funs(mean))
 ```
-The new dataset is: merge_tidy.txt.   
+The new dataset is: merge_tidy.txt.  
+This file contains all the averages of the means and standard deviations of all the features of accelertion, gyro, jerk, etc, group by the Subject and the Activity.
+  
 
+```r
+## print(merge_select_means)
+# write.csv(merge_select_means, file="merge_select_means.csv", quote=FALSE)
+
+## Instead the following file would be created for submission: merge_tidy.txt
+write.table(merge_select_means, file="merge_tidy.txt", row.name=FALSE)
+```
+  
+
+## Code Book
+Please refer to the codebook.md for the generated file's fields.
+
+  
