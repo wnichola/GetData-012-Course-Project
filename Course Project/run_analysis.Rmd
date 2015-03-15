@@ -427,9 +427,10 @@ This file contains all the averages of the means and standard deviations of all 
 ## Instead the following file would be created for submission: merge_tidy.txt
 write.table(merge_select_means, file="merge_tidy.txt", row.name=FALSE)
 
-## Please refer to the codebook run_analysis.html for how this file is finally created.
-
 ```
   
+
+## Code Book
+Please refer to the codebook.md for the generated file's fields.
 
   
