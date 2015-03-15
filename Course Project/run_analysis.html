@@ -220,7 +220,7 @@ library(dplyr)
 library(RCurl)
 
 ## Download the file from the URL provided in the project brief
-if (!file.exists(&quot;./data&quot;)) file.create(&quot;./data&quot;)
+if (!file.exists(&quot;./data&quot;)) dir.create(&quot;./data&quot;)
 
 if (!file.exists(&quot;./data/UCI HAR Dataset&quot;)) {
     fileURL &lt;- 

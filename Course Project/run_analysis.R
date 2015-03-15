@@ -6,7 +6,7 @@ library(dplyr)
 library(RCurl)
 
 ## Download the file from the URL provided in the project brief
-if (!file.exists("./data")) file.create("./data")
+if (!file.exists("./data")) dir.create("./data")
 
 if (!file.exists("./data/UCI HAR Dataset")) {
     fileURL <- 
