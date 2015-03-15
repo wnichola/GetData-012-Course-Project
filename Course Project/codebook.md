@@ -2,7 +2,7 @@
 
 # Attribute
 Subject_ID  
-    Identifer of the Subject who carried out the experiment  
+    - Identifer of the Subject who carried out the experiment  
 Activity
     Activity carried out by the Subject
 tBodyAcc_mean__X
