@@ -111,8 +111,8 @@ str(features)
 nrow(unique(features))
 
 ## Metadata of x_train and x_test
-str(x_train)
-str(x_test)
+dim(x_train)
+dim(x_test)
 
 ## Percentage of Train and Test observations
 nrow(x_train)/(nrow(x_train) + nrow(x_test)) * 100
@@ -145,32 +145,32 @@ length(unique(subject_test$V1))
 
 ## ------------------------------------------------------------------------
 
-str(body_acc_x_train)
-str(body_acc_x_test)
+dim(body_acc_x_train)
+dim(body_acc_x_test)
 
-str(body_acc_y_train)
-str(body_acc_y_test)
+dim(body_acc_y_train)
+dim(body_acc_y_test)
 
-str(body_acc_z_train)
-str(body_acc_z_test)
+dim(body_acc_z_train)
+dim(body_acc_z_test)
 
-str(body_gyro_x_train)
-str(body_gyro_x_test)
+dim(body_gyro_x_train)
+dim(body_gyro_x_test)
 
-str(body_gyro_y_train)
-str(body_gyro_y_test)
+dim(body_gyro_y_train)
+dim(body_gyro_y_test)
 
-str(body_gyro_z_train)
-str(body_gyro_z_test)
+dim(body_gyro_z_train)
+dim(body_gyro_z_test)
 
-str(total_acc_x_train)
-str(total_acc_x_test)
+dim(total_acc_x_train)
+dim(total_acc_x_test)
 
-str(total_acc_y_train)
-str(total_acc_y_test)
+dim(total_acc_y_train)
+dim(total_acc_y_test)
 
-str(total_acc_z_train)
-str(total_acc_z_test)
+dim(total_acc_z_train)
+dim(total_acc_z_test)
 
 
 ## ------------------------------------------------------------------------
@@ -183,7 +183,10 @@ set_colnames <- function (x, newnames) {
     setnames(x, oldnames, newnames)
 }
 
-# Merge data frames
+# Merge data frames so that the row orders are not changed after the merge.
+# This is done by creating an new column row_id and merging based on that row_id.
+# Then the row_id is removed.  From analysis of the data files, there are no column
+# with the name row_id.
 merge_by_row <- function(x, y, ...) {
     add_id <- function(data) {
         data.frame(data, rec_id = seq_len(nrow(data)))
@@ -205,16 +208,17 @@ set_colnames(subject_test, "Subject_ID")
 set_colnames(y_train, "Activity")
 set_colnames(y_test, "Activity")
 
-## Strip away special characters in features' names
-feature_names <- features
-feature_names$V2 <- gsub("\\(\\)", "_", feature_names$V2)
-feature_names$V2 <- gsub("\\(", "_", feature_names$V2)
-feature_names$V2 <- gsub("\\)", "_", feature_names$V2)
-feature_names$V2 <- gsub("-", "_", feature_names$V2)
-feature_names$V2 <- gsub(",", "_", feature_names$V2)
+# Set the activity_labels column names to match for y_train and y_test header
+# to facilitate merging later.
+set_colnames(activity_labels, c("Activity_ID", "Activity"))
 
-set_colnames(x_train, as.vector(feature_names$V2))
-set_colnames(x_test, as.vector(feature_names$V2))
+## Strip away special characters in features' names
+feature_names <- gsub("\\.", "_", make.names(features$V2))
+
+set_colnames(x_train, as.vector(feature_names))
+set_colnames(x_test, as.vector(feature_names))
+
+# Arbitrarily set the column names for each senor data for the 128 reading windows.
 
 inertial_labels <-  as.vector(paste("body_gyro_x_", as.character(seq_len(128)), sep=""))
 set_colnames(body_gyro_x_train, inertial_labels)
@@ -252,67 +256,76 @@ inertial_labels <-  as.vector(paste("total_acc_z_", as.character(seq_len(128)), 
 set_colnames(total_acc_z_train, inertial_labels)
 set_colnames(total_acc_z_test, inertial_labels)
 
-## Merge all the training data
-merge_df_train <- merge_by_row (subject_train, y_train)
-merge_df_train <- merge_by_row (merge_df_train, x_train)
-merge_df_train <- merge_by_row (merge_df_train, body_gyro_x_train)
-merge_df_train <- merge_by_row (merge_df_train, body_gyro_y_train)
-merge_df_train <- merge_by_row (merge_df_train, body_gyro_z_train)
-merge_df_train <- merge_by_row (merge_df_train, body_acc_x_train)
-merge_df_train <- merge_by_row (merge_df_train, body_acc_y_train)
-merge_df_train <- merge_by_row (merge_df_train, body_acc_z_train)
-merge_df_train <- merge_by_row (merge_df_train, total_acc_x_train)
-merge_df_train <- merge_by_row (merge_df_train, total_acc_y_train)
-merge_df_train <- merge_by_row (merge_df_train, total_acc_z_train)
+## Merge all the train data
+# merge main train data
+merge_df_main_train <- merge_by_row (subject_train, y_train)
+merge_df_main_train <- merge_by_row (merge_df_main_train, x_train)
 
-## Merge all the testing data
-merge_df_test <- merge_by_row (subject_test, y_test)
-merge_df_test <- merge_by_row (merge_df_test, x_test)
-merge_df_test <- merge_by_row (merge_df_test, body_gyro_x_test)
-merge_df_test <- merge_by_row (merge_df_test, body_gyro_y_test)
-merge_df_test <- merge_by_row (merge_df_test, body_gyro_z_test)
-merge_df_test <- merge_by_row (merge_df_test, body_acc_x_test)
-merge_df_test <- merge_by_row (merge_df_test, body_acc_y_test)
-merge_df_test <- merge_by_row (merge_df_test, body_acc_z_test)
-merge_df_test <- merge_by_row (merge_df_test, total_acc_x_test)
-merge_df_test <- merge_by_row (merge_df_test, total_acc_y_test)
-merge_df_test <- merge_by_row (merge_df_test, total_acc_z_test)
+# merge inertial train data
+merge_df_train_all <- merge_by_row (merge_df_main_train, body_gyro_x_train)
+merge_df_train_all <- merge_by_row (merge_df_train_all, body_gyro_y_train)
+merge_df_train_all <- merge_by_row (merge_df_train_all, body_gyro_z_train)
+merge_df_train_all <- merge_by_row (merge_df_train_all, body_acc_x_train)
+merge_df_train_all <- merge_by_row (merge_df_train_all, body_acc_y_train)
+merge_df_train_all <- merge_by_row (merge_df_train_all, body_acc_z_train)
+merge_df_train_all <- merge_by_row (merge_df_train_all, total_acc_x_train)
+merge_df_train_all <- merge_by_row (merge_df_train_all, total_acc_y_train)
+merge_df_train_all <- merge_by_row (merge_df_train_all, total_acc_z_train)
+
+## Merge all the test data
+# merge main test data
+merge_df_main_test <- merge_by_row (subject_test, y_test)
+merge_df_main_test <- merge_by_row (merge_df_main_test, x_test)
+
+# merge inertial test test
+merge_df_test_all <- merge_by_row (merge_df_main_test, body_gyro_x_test)
+merge_df_test_all <- merge_by_row (merge_df_test_all, body_gyro_y_test)
+merge_df_test_all <- merge_by_row (merge_df_test_all, body_gyro_z_test)
+merge_df_test_all <- merge_by_row (merge_df_test_all, body_acc_x_test)
+merge_df_test_all <- merge_by_row (merge_df_test_all, body_acc_y_test)
+merge_df_test_all <- merge_by_row (merge_df_test_all, body_acc_z_test)
+merge_df_test_all <- merge_by_row (merge_df_test_all, total_acc_x_test)
+merge_df_test_all <- merge_by_row (merge_df_test_all, total_acc_y_test)
+merge_df_test_all <- merge_by_row (merge_df_test_all, total_acc_z_test)
 
 ## Merge both Train and Test files into a single dataset
 
-merge_list <- list(merge_df_train, merge_df_test)
+merge_list <- list(merge_df_train_all, merge_df_test_all)
 merge_df_all <- rbindlist(merge_list)
 
+merge_list <- list(merge_df_main_train, merge_df_main_test)
+merge_df_main_all <- rbindlist(merge_list)
 
 
 ## ----echo=FALSE----------------------------------------------------------
 
-## Commented out the following as this is not to be submitted
-# print(merge_df_all)
+## Commented out the following as this is not required to be submitted
 # write.csv(merge_df_all, file="merge_df_all.csv", quote=FALSE)
 
 
 ## ------------------------------------------------------------------------
-## Retrieve columns that are means or standard deviations (std)\
-
-mean_std_col <- names(merge_df_all)[grepl("mean", names(merge_df_all), ignore.case = TRUE) | grepl("std", names(merge_df_all), ignore.case = TRUE)]
+## Retrieve columns that are means or standard deviations (std)
+# Using only merge_df_main_all as the Inertial data would not have mean or 
+# standard deviations given the column names are arbitrarily given.
+mean_std_col <- names(merge_df_main_all)[grepl("mean|std", names(merge_df_main_all), ignore.case = TRUE)]
 
 mean_std_col <- c("Subject_ID", "Activity", mean_std_col)
 
-merge_df_select <- select(merge_df_all, one_of(mean_std_col))
+merge_df_select <- select(merge_df_main_all, one_of(mean_std_col))
 
 
 ## ----echo=FALSE----------------------------------------------------------
 
 ## Commented out the following as this is not to be submitted
-# print(merge_df_select)
 # write.csv(merge_df_select, file="merge_df_select.csv", quote=FALSE)
 
 
 ## ------------------------------------------------------------------------
 
 ## Appropriately labels the data set with descriptive variable names. 
-merge_df_select$Activity <- activity_labels[merge_df_select$Activity, ]$V2
+merge_df_select$Activity <- factor(merge_df_select$Activity,
+                                   levels=activity_labels$Activity_ID,
+                                   labels=activity_labels$Activity)
 
 
 ## ------------------------------------------------------------------------

@@ -1,7 +1,7 @@
 # Readme
 
 ## Objective
-The objective of this file is to provide brief instructions on the use of the scripts or markdown files to generate the merged tidy data file (as per project requirements)
+The objective of this file is to provide brief instructions on the use of the scripts or markdown files to generate the merged tidy data file (as per project requirements).  This document also provides information on other documents that you can refer to for how this file is generated.  
 
 ## Instruction to use the R script.
 1.  Download the 'R' script: run_analysis.R
@@ -22,7 +22,7 @@ The objective of this file is to provide brief instructions on the use of the sc
 6.  To create the 'R' script, at the R console, load the knitr library, and type purl("run_analysis.Rmd")
 
 ## Metadata Analysis and Assumptions
-1.  For the analysis of the metadata of the downloaded dataset and the assumptions made, please read the run_analysis.html file.  
+1.  For the analysis of the metadata of the downloaded dataset and the assumptions made, please read the run_analysis.html file (or run_analysis.md).  
 2.  If you are familar with 'R' markdown files, the knitr will generate the run_analysis.html and display it when the Rmd is knitr.  
 
 ## Code Book
